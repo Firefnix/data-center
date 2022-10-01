@@ -1,0 +1,13 @@
+*.log
+*.aux
+*.fls
+*.synctex.gz
+*.fdb_latexmk
+.archives/
+.idea/
+__pycache__/
+.pytest_cache/
+*.out
+*.nav
+*.snm
+*.toc
