@@ -1,0 +1,51 @@
+\documentclass[french]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{amssymb}
+\usepackage{esvect}
+\usepackage{siunitx}
+\sisetup{
+    detect-all,
+    output-decimal-marker={,},
+    group-minimum-digits = 3,
+    group-separator={~},
+    number-unit-separator={~},
+    inter-unit-product={~}
+}
+\newcommand{\cel}{\degreeCelsius}
+\newcommand{\grad}{\vv{\mathrm{gra}}\mathrm{d}}
+
+\title{TP 2 : influence de la température\\
+sur un micro-ordinateur}
+\author{Groupe LTB}
+\date{27 septembre 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Objectifs}
+
+On cherche à étudier l'influence de la quantité de calculs et de la température sur la consommation électrique d'un micro-ordinateur procédant à divers calculs. L'objectif est de déterminer la fonction $f$ de la température extérieure $T_{ext}$ et de la quantité de calculs $K$  
+
+\section{Matériel}
+
+\begin{itemize}
+    \item Raspberry Pi
+    \item Alimentation continue
+    \item Carte SYSAM
+\end{itemize}
+
+\section{Manipulations}
+
+\subsection{Séance 1}
+
+Après une prise en main du Raspberry Pi et la réalisation du montage de mesure de sa consommation, on a réalisé mesures en intensité efficace (la tension est constante à $U = \SI{5,00}{V}$). Les valeurs vont de $I_{min} = \SI{200}{mA}$ au repos (sans calculs autre que ceux réalisés par le système d'exploitation), à $I_{max} = \SI{600}{mA}$ aux alentours de 4000 kcps (trois fenêtres à 1300 kcps).
+
+\subsection{Séance 2}
+
+Le chauffage du micro-ordinateur à l'aide d'un sèche-cheveux entraîne, pour la même quantité de calculs (1000 kcps) une augmentation l'intensité efficace, donc de la puissance consommée : de $\SI{392}{mA}$ à température ambiante, le courant passe à $\SI{458}{mA}$ après un chauffage d'une trentaine de secondes, pour redescendre à $\SI{424}{mA}$ après deux minutes de refroidissement à l'air libre.
+
+\end{document}
