@@ -20,7 +20,6 @@
 \title{TP 2 : influence de la température\\
 sur un micro-ordinateur}
 \author{Groupe LTB}
-\date{27 septembre 2022}
 
 \begin{document}
 
@@ -28,7 +27,7 @@ sur un micro-ordinateur}
 
 \section{Objectifs}
 
-On cherche à étudier l'influence de la quantité de calculs et de la température sur la consommation électrique d'un micro-ordinateur procédant à divers calculs. L'objectif est de déterminer la fonction $f$ de la température extérieure $T_{ext}$ et de la quantité de calculs $K$  
+On cherche à étudier l'influence de la quantité de calculs et de la température sur la consommation électrique d'un micro-ordinateur procédant à divers calculs. L'objectif est de déterminer la fonction $f$ de la température extérieure $T_{ext}$ et de la quantité de calculs $K$ donnant $I = f(T_{ext}, K)$.
 
 \section{Matériel}
 
@@ -36,6 +35,7 @@ On cherche à étudier l'influence de la quantité de calculs et de la températ
     \item Raspberry Pi
     \item Alimentation continue
     \item Carte SYSAM
+    \item Moyens d'influencer la température : étuve, sèche-cheveux, bac à glace...
 \end{itemize}
 
 \section{Manipulations}
@@ -47,5 +47,9 @@ Après une prise en main du Raspberry Pi et la réalisation du montage de mesure
 \subsection{Séance 2}
 
 Le chauffage du micro-ordinateur à l'aide d'un sèche-cheveux entraîne, pour la même quantité de calculs (1000 kcps) une augmentation l'intensité efficace, donc de la puissance consommée : de $\SI{392}{mA}$ à température ambiante, le courant passe à $\SI{458}{mA}$ après un chauffage d'une trentaine de secondes, pour redescendre à $\SI{424}{mA}$ après deux minutes de refroidissement à l'air libre.
+
+\subsection{Séance 3}
+
+Il s'agit essentiellement de la même manipulation que la séance 2, mais avec un appareil de chauffage plus perfectionné (étuve). On cherche à obtenir un résultat plus quantitatif que celui de la séance 2, qui n'était que qualitatif. Les mesures donnent au repos, pour 1000 kcps, les résultats suivants : \textit{[...]}
 
 \end{document}
