@@ -1,0 +1,41 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[locale = FR]{siunitx} % les unités PROPRES
+\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
+
+\newcommand{\eff}{_\text{eff}}
+
+\title{Modélisation d'un ordinateur\\
+\small{par un cicruit simple}}
+\author{Groupe LTB}
+
+\begin{document}
+
+\maketitle
+
+\section{Objectifs}
+
+On cherche à modéliser le comportement d'un ordinateur en consommation de courant par un circuit électrique simple. Les données viennent du TP-1, c'est-à-dire avec $\varphi = \varphi(U\eff) - \varphi(I\eff)$ :
+
+$$U\eff = \SI{230}{V} \quad I\eff = \SI{0,20}{A} \quad \text{et} \quad \cos \varphi = \SI{0,7}{}$$
+
+\section{Modélisation}
+
+On considère 3 modèles :
+\begin{enumerate}
+    \item Résistance et consensateur en série
+    \item Résistance et consensateur en série
+    \item Résistance en dérivation sur un consensateur
+\end{enumerate}
+
+\section{Résolution}
+
+Les calculs menés pour le modèle 1 donnent $R = \SI{1,6}{k\ohm}$ et $C = \SI{1,9}{\micro F}$, et par ailleurs $\varphi = \SI{-0,8}{rad}$.
+Le modèle 2 donne $R = \SI{800}{\ohm}$ et $L = \SI{2,6}{H}$, avec $\varphi = \SI{-0,8}{rad}$.
+Le modèle 3 donne quant à lui $R = \SI{1,6}{k\ohm}$ et $C = \SI{2}{\micro F}$, avec $\varphi = \SI{0,8}{rad}$.
+
+\end{document}
