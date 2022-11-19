@@ -1,0 +1,374 @@
+
+	\documentclass[a4paper,11pt]{beamer}
+%	\documentclass[a4paper,11pt,handout]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%      Les packages de base                %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[utf8]{inputenc}  % pour taper directement les accents
+\usepackage[T1]{fontenc}     % pour inclure les polices avec accents et gérer la césure des mots
+\usepackage[french]{babel}	 % pour utiliser les règles de la typographie française
+\usepackage{mathtools,amssymb,amsfonts}	% plus de math :-)
+\usepackage{graphicx}	% c'est pour \includegraphics et \graphicspath
+\usepackage{lastpage}   % \cfoot{\thepage $/$ \pageref{LastPage}}
+\usepackage{ifthen}     % pour \ifthenelse
+\usepackage{eurosym}    % pour \euro
+
+\usepackage[locale = FR]{siunitx} % les unités PROPRES
+\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
+
+\usepackage{pgfplots}  % environnement axis
+\pgfplotsset{compat=1.15}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}  % pour faire des calculs sur les coordonnées ($(A)+(45:3)$)
+
+\usepackage{tikzelec}  % package maison pour dessiner les circuits électroniques
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  Pour numeroter les pages                %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamertemplate{navigation symbols}{}
+%=======================================================
+% Pour numéroter les diapos :
+\setbeamertemplate{footline}[frame number]
+%=======================================================
+% Pour numéroter les diapos en choissant le numéro de la dernière
+% dans ce cas enlever la commande \setbeamertemplate{footline}[page number]
+% et utiliser les deux lignes suivantes
+\newcommand {\NumeroDerniereDiapo} {22}
+%\addtobeamertemplate{footline}{\hfill\insertframenumber\,/\,\NumeroDerniereDiapo\hspace{2mm}\null\vspace{1mm}}
+%=======================================================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  Pour positionner les choses où on veut  %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[absolute,showboxes,overlay]{textpos}
+\textblockorigin{10mm}{10mm} % origine des positions
+\setlength{\TPHorizModule}{1mm} % échelle horizontale
+\setlength{\TPVertModule}{\TPHorizModule} % échelle verticale identique à l'horizontale
+
+% à ajouter dans les frames pour positioner les objets
+% \begin{textblock}{largeur}(x,y) (les nombres sont en mm) :
+%
+%%\TPshowboxestrue  % (par défaut) les boites sont visibles
+%%\TPshowboxesfalse % décommenter pour faire disparaitre les boites
+%
+%\begin{textblock}{115}(-3,10)
+%bla bla
+%\end{textblock}
+%
+
+
+\newenvironment{tikzgrille}[1][0]{
+% 1 pour afficher la grille / 0 pour ne pas l'afficher = option par défaut
+\begin{textblock}{180}[.5,.5](54,38)
+\begin{tikzpicture}
+\draw (-9,-9) rectangle (9,9);
+\ifthenelse {#1=1} {\begin{scope}[magenta!60]
+\draw (-9,-9) grid (9,9);
+\fill (0,0) circle (.05);
+\fill (1,0) circle (.05);
+\fill (0,1) circle (.05);
+\node[anchor=text] at (0.1,0.2) {\footnotesize $(0,0)$};
+\node[anchor=text] at (1.1,0.2) {\footnotesize $(1,0)$};
+\node[anchor=text] at (0.1,1.2) {\footnotesize $(0,1)$};
+\end{scope}} {} }
+{\end{tikzpicture}\end{textblock}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+% ATTENTION : l'option [fragile] permet d'utiliser \verb mais neutralise \uncover
+\begin{frame}[fragile]
+
+\frametitle{Quelques conseils}
+\framesubtitle{Pour un TIPE heureux\,\dots}
+
+\begin{itemize}\setlength{\itemsep}{5mm}
+
+\item Numérotez vos slides !\hspace{5mm}{\tiny Il est possible de fixer le numéro de la dernière page  pour ajouter des annexes après la \frquote{dernière page} (voir commandes dans le préambule de ce fichier).}
+
+\item En physique, mettez une photo où on vous voit (seul)
+
+avec le dispositif expérimental (avec des explications).
+
+\item En physique, pour les unités, utiliser le package \texttt{siunitx} :
+% ATTENTION pour utiliser \verb il faut mettre [fragile] en option après \begin{frame}
+
+\medskip
+
+\verb|\SI{1.38e-23}{J.K^{-1}}| \ donne \ \SI{1.38e-23}{J.K^{-1}}
+
+\smallskip
+
+pour les valeurs sans unité : \verb| \num{e-4}  \num{1.23}|
+
+\item Pour les courbes, importer des images générées par \texttt{python}
+
+ou bien utiliser le package \texttt{pgfplots} (exemple plus loin).
+
+\item Pour placer les objets où vous le souhaitez, deux solutions sont présentées sur les slides suivants.
+
+\end{itemize}
+
+\end{frame}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+%\TPshowboxesfalse % décommenter pour faire disparaitre les boites
+
+\begin{frame}
+
+\frametitle{Première solution (simple) : utiliser textblock}
+\framesubtitle{Hello}
+
+\begin{textblock}{115}(0,7)
+pour avoir de la doc : \quad \url{https://ctan.org/pkg/textpos}
+\end{textblock}
+
+\begin{textblock}{50}(0,30)
+pour que les bords des boites ne soient \textbf{pas affichés},
+ajouter $\backslash$\texttt{TPshowboxesfalse}
+\end{textblock}
+
+
+\begin{textblock}{50}(55,20)
+\begin{center}
+Mon image :
+
+\vspace{3mm}
+
+% \includegraphics[width=30mm]{Tux}
+\end{center}
+\end{textblock}
+
+
+\end{frame}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+\newcommand {\horloge} [4] [black] {% temps X Y
+\def \R {.4}
+\begin{scope}[xshift=#3cm,yshift=#4cm,color=#1]
+\draw[thick,fill=white] (0,0) circle (\R);
+\draw[fill]  (0,0) circle (.03);
+\foreach \n in {0,30,...,330} {\draw (\n:\R)--(\n:.32);}
+\foreach \n in {0,90,...,270} {\draw[thick] (\n:\R)--(\n:.3);}
+\draw [thick,->,>=latex] (0,0)--({90-#2*6}:\R);
+\end{scope}}
+
+%=====================================================
+
+\begin{frame}
+
+\frametitle{Deuxième solution (très puissante) : utiliser TikZ}
+\framesubtitle{Good bye}
+
+\vspace{-1mm}
+
+\hspace*{-8mm}
+\begin{tikzpicture}
+
+\node[anchor=text] at (-1.5,3) {pour avoir de la doc : \quad \url{https://ctan.org/pkg/pgf}};
+
+\node[anchor=text] at (-1.5,2.3) {en français : \quad \url{http://math.et.info.free.fr/TikZ}};
+
+
+% \node at (5,0) {\includegraphics[width=30mm]{Tux}};
+\node at (5,-2) {Figure 1};
+
+\uncover<2->{%======================================
+\coordinate (A) at (7,-1);
+\draw[red,line width = 1.2, ->, >=latex] (A)--(5.3,.1);
+\draw (A) ++ (.2,-.2) node[red,anchor=text] {Bec de Tux};
+}%===================================================
+
+
+\uncover<2-2>{%======================================
+\node[anchor=text] at (-1,-3.3) {\parbox{110mm}{En physique, \textcolor{red}{il faut mettre des flèches} sur vos photos et vos schémas pour désigner les différents éléments : \textbf{aidez le jury} à bien rentrer dans votre protocole expérimental !}};
+
+}%===================================================
+
+
+\uncover<3->{%======================================
+
+\begin{scope}[thick]
+\def \a {1.5}
+\draw[blue,fill=blue!10] (-\a,-\a) rectangle (\a,\a);
+\draw[red]  (-\a,0)--(0,\a)--(\a,0)--(0,-\a)--cycle;
+\end{scope}
+
+\horloge[violet] {30} {0} {0}
+\horloge {5} {-1} {-2.5}
+\horloge {0}  {0} {-2.5}
+\horloge {-5} {1} {-2.5}
+}%===================================================
+
+
+\end{tikzpicture}
+
+\end{frame}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+\begin{frame}
+
+\frametitle{Placez les objets où vous voulez}
+\framesubtitle{Il suffit de \frquote{copier-coller} le code de ce slide (et tikzgrille qui est dans le préambule)}
+
+\begin{tikzgrille}[1]
+% 1 pour afficher la grille / 0 pour ne pas l'afficher = option par défaut
+
+\def \xt {-4}
+\def \yt {2}
+\node at (\xt,\yt)   {Une petite grille};
+\node at (\xt,\yt-.5) {pour vous aider.};
+
+\node[anchor=text] at (1,-1) {\parbox[t]{60mm}{%
+Liste des objectifs :
+\begin{itemize}
+\item premier objectif
+\item deuxième objectif
+\item troisième objectif
+\end{itemize}
+}};
+
+% \node at (-2,-2) {\includegraphics[width=25mm]{Tux}};
+
+\end{tikzgrille}
+
+\end{frame}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+\begin{frame}
+
+\frametitle{Pour tracer des courbes}
+\framesubtitle{Utiliser le package \texttt{pgfplots}}
+
+\vspace{3mm}
+
+\begin{tikzpicture}
+\begin{axis}[% Quelques options parmi un nombre bien plus grand :
+%
+width = 10cm, height = 6cm,
+%
+domain=-1:1, samples=60, smooth, % peut aussi se mettre sur chaque courbe
+%
+title  = {Fonctions d'ondes dans un puits infini},
+xlabel = {$x/a$},
+ylabel = $\phi(x)$,
+%
+%axis x line = middle, % = bottom % un seul axe des abscisses au milieu
+%axis y line = center, % un seul axe des ordonnées au centre
+%
+%axis equal,           % Ymax - Ymin = Xmax - Xmin
+%enlargelimits = false,  % il n'augmente pas la taille du cadre
+%xmin = -1, xmax = 1,  % pas nécessaire avec "axis x line = middle"
+%ymin = -1, ymax = 1,
+%xtickmin = -.7, xtickmax = .7, % valeurs au dela desquelles il ne met rien (existe aussi sur y)
+%minor tick num = 3,     % ajoute des sous graduation (aussi sur grid)
+%tick align = outside, % met les tick à l'extérieur
+%tickpos = left,       % ne met les tick que en bas et à gauche
+grid,            % "= both" si on veut aussi sur minor tick
+%
+xtick = {-1,-.5,...,1},
+xticklabels = {$-1$, $-\frac 12$, $0$, $\frac 12$, $1$},
+%
+%extra x ticks = {-.3},  % good avec grid
+%extra x tick style = {grid style={black}, xticklabel=\empty},
+%
+legend pos = south west,
+]
+
+\addplot [red, line width=1,]
+{sin((x+1)*180/2)};
+
+\addplot [blue, line width=1,]
+{sin((x+1)*180)};
+
+\legend{$\phi_1(x)$, $\phi_2(x)$}
+
+\end{axis}
+
+\node at (4,-1.8) {\Large Les graduations doivent être \textbf{lisibles}};
+\node[red] at (4,-2.4) {\tiny par défaut avec python elles sont \textbf{trop petites} : pensez à les agrandir};
+
+\end{tikzpicture}
+
+\end{frame}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+\begin{frame}
+
+\frametitle{Pour vos circuits électroniques}
+\framesubtitle{Utilisez par exemple le package maison \texttt{tikzelec}}
+
+\begin{center}
+\begin{tikzelec}
+
+\def \XA {0}
+\def \XB {2.2}
+\def \XC {3.75}
+\def \XD {5.3}
+\def \XE {7.5}
+
+\def \YA {0}
+\def \YB {2}
+\def \YC {4}
+\def \YM {-.7}
+
+\draw (\XA,\YA) rectangle (\XE,\YC) ;
+
+\TikzelecSourceIdeale    [90] {\XA} {\YB}
+\TikzelecTensionComposant[90] {-1}  {0}
+\TikzelecNom {$E$}              {-.8} {0}
+
+\TikzelecResistance {\XB} {\YC}
+\TikzelecNom {$R$}    {0}   {1}
+
+\TikzelecBobine  {\XD} {\YC}
+\TikzelecNom {$L$} {0}   {1}
+
+\TikzelecCondensateur    [90] {\XE} {\YB}
+\TikzelecTensionComposant[90] {1} {0}
+\TikzelecNom {$u_C$}          {1} {0}
+\TikzelecNom {$C$}         {-2.2} {0}
+
+\draw (\XC,\YA)--(\XC,\YM);
+\TikzelecMasse {\XC} {\YM}
+
+\node at (\XC,-3.1) {Ne perdez trop pas de temps à essayer de comprendre};
+\node at (\XC,-4.3) {comment ça marche : venez me poser des questions !};
+
+\end{tikzelec}
+\end{center}
+
+\end{frame}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+\end{document}
