@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[locale = FR]{siunitx} % les unités PROPRES
+\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
+
+\newcommand*{\eff}{_\text{eff}}
+\newcommand{\fleche}{$\Rightarrow {}$}
+
+\title{Commentaires sur la revue 1}
+\author{Groupe LTB}
+
+\begin{document}
+
+\maketitle
+
+\textit{Ce document est une liste des remarques et suggestions qui ont été faites par M. Delannoy lors de la 1 revue de TIPE, qui s'est tenue le 22 nov. 2022.}
+
+\vspace{1cm}
+
+\begin{itemize}
+    \item Carte des data-center (motivation)
+    \item Photo wattmètre + explication du protocole (influence de K, justification de l'utilisation du Raspberry)
+    \item Signe de $\varphi$ pour les modèles simples \fleche manipulation
+    \item Écrire le protocole (ne pas seulement le dire)
+    \item Définir proprement $K$
+    \item Chiffres significatifs, ou barres d'incertitude (mieux)
+    \item Virgule en séparateur des milliers
+    \item Parler de $P\eff$ au lieu de $I\eff$
+    \item Mesurer $P\eff(K)$ en faisant croître K progressivement puis pour les mêmes valeurs mais en décroissant (noter les temps de pause) \fleche hystérésis
+    \item Demander au labo un thermomètre à four (avec câble)
+    \item Thermomètres dans l'étuve \fleche près des parois et près du Raspberry
+    \item Coeff. $h$ de la loi de Newton (?)
+    \item T dépend de la puissance évacuée \fleche voir cours loi de Newton
+    \item Pour les modèles à plusieurs ordinateurs, expliquer \fleche pavé supposé homogène, de capacité thermique $C$
+    \item Le modèle 3D est \textit{entre} les Raspberry
+    \item Faire deux modèles \fleche Python (fait main) et SolidWorks
+    \item Faire un modèle à 1D (ordinateurs en ligne), puis
+    \item Faire un modèle à 2D (rectangle par exemple), puis éventuellement
+    \item Faire un modèle à 3D
+    \item Dire que le problème est \textbf{bouclé}
+    \item Se baser sur le DM n°5 pour la modélisation
+\end{itemize}
+
+\end{document}
