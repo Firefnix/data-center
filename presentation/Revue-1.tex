@@ -100,7 +100,7 @@
 \frametitle{Ancrage au thème et motivation}
 Ancrage : augmentation de l'usage des technologies numériques
 
-Motivation : \textit{[...]}
+Motivation : écologie, enjeux économiques
 \end{frame}
 
 \begin{frame}
@@ -109,6 +109,7 @@ Motivation : \textit{[...]}
         \item Modélisation par un circuit équivalent
         \item Influence de la quantité de calculs
         \item Influence de la température
+        \item Objectifs futurs
     \end{enumerate}
 \end{frame}
 
@@ -180,12 +181,19 @@ Motivation : \textit{[...]}
     \frametitle{Influence de la quantité de calculs}
 
     \begin{enumerate}
-        \item Étude qualitative : $\pdv{I\eff}{T} > 0$ ($T \nearrow ~\Rightarrow~ I\eff \nearrow$)
+        \item Étude qualitative : $\pdv{I\eff}{K} > 0$ ($K \nearrow ~\Rightarrow~ I\eff \nearrow$)
         \item Étude quantitative
-        \begin{center}
-            \includegraphics[width=0.8\textwidth]{images/TP-2.1.jpg}
-        \end{center}
     \end{enumerate}
+
+    \begin{tikzpicture}
+        \node at (2, 0) {\includegraphics[width=0.8\textwidth]{images/TP-2.1.jpg}};
+        \node at (-1, -3) {Carte Sysam};
+        \node at (2, -3) {Raspberry Pi};
+
+        \draw[red, ->] (-1, -2.5) -- (-0.5, 0);
+        \draw[red, ->] (2, -2.5) -- (1.8, -0.5);
+    \end{tikzpicture}
+
 \end{frame} % calculs: tp
 
 \begin{frame}
@@ -219,7 +227,7 @@ Motivation : \textit{[...]}
     \frametitle{Influence de la température}
 
     \begin{enumerate}
-        \item Étude qualitative
+        \item Étude qualitative $\pdv{I\eff}{T} > 0$ ($T \nearrow ~\Rightarrow~ I\eff \nearrow$)
         \item Étude quantitative
         \begin{center}
             \includegraphics[width=0.8\textwidth]{images/TP-2.3.jpg}
@@ -264,6 +272,22 @@ Motivation : \textit{[...]}
 
     \end{tikzpicture}
 \end{frame} % température
+
+\begin{frame}
+    \frametitle{Objectifs futurs}
+
+    Ce qui a été fait :
+    \begin{itemize}
+        \item $I = f(K, T)$ (en cours)
+    \end{itemize}
+
+    Ce qui reste à faire :
+    \begin{itemize}
+        \item Détermination de $C_{eq}$, $\lambda_{eq}$ et $h$ (coef. de Newton)
+        \item Divers modèles d'interaction thermique % entre plusieurs ordinateurs
+        \item Optimisation de la répartition des calculs
+    \end{itemize}
+\end{frame}
 
 %=====================================================
 %=====================================================
