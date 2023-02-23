@@ -3,7 +3,8 @@ import numpy as np
 from plot1d import plot
 from constantes import T0, Da0, D, c
 
-hyp = 'B' # hypothèse
+hyp = 'A' # hypothèse
+print(f'Hypothèse {hyp}')
 
 La, L, Lp = 1, 1e-1, 1e-2 # m
 if hyp == 'A': La = L
@@ -20,7 +21,7 @@ Nt = int((Nx**2) / A)
 Te = tau / Nt
 print(f'Discrétisation espace×temps, {Nx}×{Nt}')
 
-P = 0.05 # W
+P = 0.5 # W
 Cp = c * S * Lp # J.K^-1
 
 class Zone(Enum):

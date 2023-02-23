@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from constantes import celsius, kelvin, T0
 
 dil = 100 # facteur de dilatation des longueurs
+dilt = 1 # facteur de dilatation temporelle
 fig = plt.figure()
 ax = fig.add_subplot()
 
@@ -11,7 +12,7 @@ def plot_courbes(T, La, Nx, Nt):
     positions = np.linspace(0, La*dil, Nx+1)
     c = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'black', 'grey', 'cyan']
     for n in range(Ncourbes):
-        plt.plot(positions, T[:, int(Nt*(n/Ncourbes)**2)] - kelvin(0), color=c[n],
+        plt.plot(positions, T[:, int(Nt/dilt*(n/Ncourbes)**2)] - kelvin(0), color=c[n],
             label=f't = {(n/Ncourbes)**2:.2f} τ')
 
 def plot_zones(Tmax, Lp, L, La):
@@ -28,7 +29,7 @@ def legende(L):
     plt.ylabel('T (en °C)')
 
 def plot(T, Lp, L, La, Nx, Nt):
-    Tmax = max(T[:, -1])
+    Tmax = max(T[:, int(Nt/dilt)])
     plot_courbes(T, La, Nx, Nt)
     plot_zones(Tmax, Lp, L, La)
     legende(L)

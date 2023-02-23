@@ -6,6 +6,7 @@
 \usepackage{xspace} % espacement
 \usepackage{physics} % dérivées
 \usepackage{amssymb}
+\usepackage{graphicx}
 
 \usepackage{siunitx}
 \sisetup{
@@ -48,9 +49,9 @@
 
 \section{Objectifs}
 
-On cherche à réaliser une sirholation des échanges thermiques entre deux systèmes :
+On cherche à réaliser une simulation des échanges thermiques entre deux systèmes :
 \begin{itemize}
-    \item Un ordinateur (\ordi), recevant  une puissance \etdt $\var{P}$, initialement à la température $T_0$
+    \item Un ordinateur (\ordi), recevant  une puissance $P$, initialement à la température $T_0$
     \item Le milieu extérieur (\air), qu'on considèrera être de l'air (sec)
 \end{itemize}
 
@@ -66,7 +67,7 @@ Le processeur a une capacité thermique $C_p$, ainsi la capacité thermique de l
 
 \subsection{Air}
 
-On notera les constantes thermodynamiques relatives à l'air avec un indice $a$. On prend pour conductivité thermique de l'air à pression consante $P = \SI{1}{bar}$, avec $T$ la température de l'air exprimée en degrés celsius \footnote{Voir  WG Kannuluik and EH Carman, \textit{The Temperature Dependence of the Thermal Conductivity of Air}, DOI CH9510305} et $\lambda_{a}$ en $\SI{}{mW.m^{-1}.K^{-1}}$.
+On notera les constantes thermodynamiques relatives à l'air avec un indice $a$. On prend pour conductivité thermique de l'air à pression consante $P = \SI{1}{bar}$, avec $T$ la température de l'air exprimée en degrés celsius \footnote{Voir  WG Kannuluik and EH Carman, \textit{The Temperature Dependence of the Thermal Conductivity of Air}, DOI CH9510305} et $\lambda_{a}$ en $\SI{}{mW.m^{-1}.K^{-1}}$
 
 $$\lambda_{a} = -0.000044075614398888 \times T^2 + 0.0766069577308689*T + 24.3560822452597$$
 
@@ -98,11 +99,12 @@ $$\rho(M) c(M) \pdv{T}{t}\/(M, t) = \lambda (M) \Delta T(M, t) $$
 
 \subsection{Modèle unidimentionnel}
 
-On considère que l'espace de travail est un axe $(Ox)$, en fait un cylindre de section $S$, et que l'ordinateur est représenté par un segment de longueur $l$ (toutes les grandeurs ne dépendent de $y$ ou $z$). On considère que la source de puissance est un segment de longueur $l_p$ centré par rapport au segment de longueur $l$.
+On considère que l'espace de travail est un axe $(Ox)$, en fait un cylindre de section $S$ et de longueur $l_a = \SI{1}{m}$, et que l'ordinateur est représenté par un segment de longueur $l = \SI{10}{cm}$ (toutes les grandeurs ne dépendent de $y$ ou $z$). On considère que la source de puissance est un segment de longueur $l_p = \SI{1}{cm}$ centré par rapport au segment de longueur $l$.
 
 \begin{tikzpicture}
-    \draw[thick] (0, 0) -- (5, 0);
-    \draw[blue, very thick] (2, 0) -- (3, 0) node [midway, above, sloped] {$l_p$};
+    \draw[thick] (0, 0) -- (9, 0) node [above, sloped] {$l_a$};
+    \draw[purple, ultra thick] (2, 0) -- (7, 0) node [above, sloped] {$l$};
+    \draw[blue, ultra thick] (4, 0) -- (5, 0) node [midway, above, sloped] {$l_p$};
 \end{tikzpicture}
 
 La température dépend de l'espace via la variable $x$ et du temps via la variable $t$, ainsi on la représente par la fonction notée $T(x, t)$, ou par la matrice \p{T[i][j]}, où \p{i} et \p{j} sont des entiers lorsque l'espace et le temps sont discrétisés.
@@ -137,8 +139,23 @@ Puisque les bords extérieurs de l'ordinateur sont à la même température que 
 
 L'hypothèse A se traduit ainsi par les conditions aux limites $\forall t,~T(x=0, t) = T(x=l, t) = T_0$, c'est-à-dire $\forall$ \p{ti}, \p{T[0, ti] = T[-1, ti] = T0}.
 
+\includegraphics[scale=0.37]{1dA_P500mW_t11s.png}
+
+Ci-dessus se trouve une visualisation des résultats sous l'hypothèse d'une puissance constante $P = \SI{500}{mW}$. Le temps d'échelle vaut $\tau = \SI{11}{s}$. La figure ci-dessous montre pour un temps $\tau = \SI{2}{min}$ les résultats obtenus en régime permanent.
+
+\includegraphics[scale=0.37]{1dA_P500mW_t110s.png}
+
 \subsubsection{Hypothèse B}
 
+On considère plus, dans le cadre de cette hypothèse que l'espace d'observation est limité à l'ordinateur : celui-ci est entouré d'air. L'extension totale de l'espace est alors de $l_a$ (air et ordinateur compris).
+
+La condition aux limites est cette fois dynamique : on impose une « continuité » de la température aux extrémités de l'espace. Physiquement, cela correspond à un modèle où le système (air compris) est placé dans une enceinte parfaitement calorifugée. Pour tout \p{ti} tel que \p{T[:, ti]} ait déjà été calculé, on impose alors \p{T[0, ti+1] = T[1, ti+1]} et \p{T[-1, ti+1] = T[-2, ti+1]}.
+
+\includegraphics[scale=0.37]{1dB_P500mW_t11s.png}
+
+Ci-dessus se trouve une visualisation des résultats sous l'hypothèse d'une puissance constante $P = \SI{500}{mW}$. Pour $\tau = \SI{11}{s}$, on a un résultat équivalent à celui obtenu dans le cadre de l'hypothèse A en raison de la faible valeur de $\tau$. Ce n'est plus le cas pour des temps d'échelle plus grands, ci-dessus avec $\tau = \SI{3}{h}$, qui permettent d'observer le comportement du système en régime permanent.
+
+\includegraphics[scale=0.37]{1dB_P500mW_t11000s.png}
 
 \section*{Annexe : notations}
 
