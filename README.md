@@ -5,9 +5,10 @@ Ce dépôt a pour objectif d'héberger des documents, du code et divers résulta
 ## Organisation
 
 Ce dépôt compte divers dossiers :
- - `tp` contient les fiches TP (protocoles, ressources et résultats)
  - `annexe` contient des documents sans rapport direct avec le sujet
- - `presentation` contient les diaporamas, livrables et les documents brouillons pour la rédaction de ceux-ci 
+ - `presentation` contient les diaporamas, livrables et les documents brouillons pour la rédaction de ceux-ci
+ - `theorie` contient le travail de calculatoire et les simulations
+ - `tp` contient les fiches TP (protocoles, ressources et résultats)
 
 ## Guide pour Ulysse
 
