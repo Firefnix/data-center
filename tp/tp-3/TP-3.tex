@@ -1,0 +1,100 @@
+\documentclass[french]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{amssymb}
+\usepackage{esvect}
+\usepackage{physics}
+\usepackage{siunitx}
+\sisetup{
+    detect-all,
+    output-decimal-marker={,},
+    group-minimum-digits = 3,
+    group-separator={~},
+    number-unit-separator={~},
+    inter-unit-product={~}
+}
+\newcommand{\cel}{\degreeCelsius}
+% \newcommand{\grad}{\vv{\mathrm{gra}}\mathrm{d}}
+\newcommand{\bs}{\xspace$\backslash$\xspace}
+\newcommand{\moy}{\expval}
+
+\title{TP 3 : grandeurs thermodynamiques\\
+d'un micro-ordinateur}
+\author{Groupe 10, MP*}
+
+\begin{document}
+
+\maketitle
+
+\section{Objectifs}
+
+On cherche à déterminer la valeur des grandeurs physiques suivantes :
+\begin{itemize}
+    \item La masse équivalente en eau $m_{\text{calo}}$ d'un calorimètre
+    \item La masse $m$, les dimensions spatiales et la capacité thermique $C$ d'un micro-ordinateur Raspberry Pi 3
+\end{itemize}
+\section{Matériel}
+
+\begin{itemize}
+    \item Raspberry Pi
+    \item Alimentation continue
+    \item Carte SYSAM
+    \item Calorimètre
+\end{itemize}
+
+\section{Manipulations}
+
+\subsection{Séance 1}
+
+\subsubsection{Masse en eau du calorimètre}
+
+On suit le protocole suivant pour déterminer $m_\text{calo}$.
+\begin{enumerate}
+    \item Le laboratoire est initialement à la température $T_\text{a} = \SI{20}{\cel}$
+    \item On met dans le calorimètre $m_\text{eau} = \SI{200}{g}$ d'eau chaude à $T_\text{c} = \SI{52}{\cel}$
+    \item On mesure après thermalisation (pas trop longue pour éviter les fuites thermiques) la température de l'eau $T_\text{f} = \SI{47}{\cel}$
+    \item La masse équivalente en eau du calorimètre est donnée par
+    $$m_\text{calo} = \frac{T_\text{c} - T_\text{f}}{T_\text{f} - T_\text{a}} m_\text{eau} = \SI{37}{g}$$
+
+\end{enumerate}
+
+En prenant $c_{\text{eau}} = \SI{4,18}{kJ.K^{-1}.kg^{-1}}$ on en déduit $C_{\text{calo}} = \SI{167}{J/K}$.
+
+\subsubsection{Capacité thermique de l'ordinateur}
+
+On mesure les grandeurs $I_{\text{inst}}$, $I_{\text{eff}}$ et $T$ en fonction du temps avec 1000 points uniformément répartis sur une durée d'acquisition de 10 min (une mesure toute les 600 ms).
+\begin{enumerate}
+    \item Avant calculs, $\moy{T}_\text{i} = \SI{18,98}{\cel}$ et la valeur moyenne de $I_{\text{inst}}$ est de 288 mA
+    \item Lancement des calculs à $t = \SI{1}{min}$
+    \item Fin des calculs à $t = \SI{381,6}{s}$. Pendant les calculs, on a
+    \begin{itemize}
+        \item la tension $U = \SI{5}{V}$
+        \item l'intensité $\moy{I_{\text{inst}}} = \SI{381}{mA}$
+        \item la puissance $\moy{P} = \SI{1,90}{W}$
+        \item le travail électrique $W = \SI{612}{J}$
+    \end{itemize}
+    \item Régime stationnaire de thermalisation : sur les 100 dernières secondes, $\moy{T}_\text{f} = \SI{20,63}{\cel}$
+\end{enumerate}
+
+La valeur de $C$ est obtenue par
+
+$$C = \frac{W}{\moy{T}_\text{f} - \moy{T}_\text{i}} - C_{\text{calo}} = \SI{204}{J/K}$$
+
+\subsubsection{Masse de l'ordinateur}
+
+La grandeur donnée par le vendeur est $m = \SI{45}{g}$.
+
+Avec la valeur obtenue pour $C$, on en déduit la capacité thermique massique moyenne de l'ordinateur
+
+$$c = \frac{C}{m} = \SI{4,5}{kJ.K^{-1}.kg^{-1}}$$
+
+\underline{\textbf{Commentaires :}}
+\begin{itemize}
+    \item La valeur tabulée de la capacité thermique massique du silicium, composant principal des circuits imprimés est $c_\text{silicium} = \SI{0,7}{kJ.K^{-1}.kg^{-1}}$
+    \item La valeur tabulée de la capacité thermique massique du PVC (souple), qui compose la gaine des câbles connectés à l'ordinateur est $c_\text{PVC} = \SI{0,9}{kJ.K^{-1}.kg^{-1}}$
+    \item La masse donnée par le vendeur ne prend pas en compte l'enceinte en plastique (PCV rigide), ni les câbles (PVC souple) connectés à l'ordinateur
+\end{itemize}
+
+\end{document}
