@@ -1,7 +1,7 @@
 from enum import Enum, auto
 import numpy as np
 from plot1d import plot
-from constantes import T0, Da0, D, c
+from constantes import T0, Da, D, c
 
 hyp = 'A' # hypothèse
 print(f'Hypothèse {hyp}')
@@ -10,14 +10,12 @@ La, L, Lp = 1, 1e-1, 1e-2 # m
 if hyp == 'A': La = L
 S = 1e-4 # m^2
 tau = La**2 / D # s
-print(f'τ = {tau:.2f} s')
-Nx = 300
-
-A = 0.5
-B = 1 - 2*A
+dilt = 1
+print(f'τ = {tau/dilt:.2f} s')
+Nx = 100
 
 Xe = La / Nx
-Nt = int((Nx**2) / A)
+Nt = int((Nx**2) / (0.5)) # 0.5 est une constante magique
 Te = tau / Nt
 print(f'Discrétisation espace×temps, {Nx}×{Nt}')
 
@@ -37,14 +35,14 @@ def zone(xi) -> Zone:
         return Zone.carc
     return Zone.air
 
-def Dx(xi):
+def Dx(xi, T): # 1, K -> m^2/s
     if zone(xi) == Zone.air:
-        return Da0
+        return Da(T)
     return D
-Ax = np.array([(Dx(xi) * Te) / (Xe**2) for xi in range(Nx-1)])
-print(f'Constante A : {(Da0 * Te) / (Xe**2):.2f} (air)')
-print(f'Constante A : {(D * Te) / (Xe**2):.2f} (ordinateur)')
-Bx = 1 - 2*Ax
+def Ax(T): # K -> 1
+    return np.array([(Dx(xi, T0) * Te) / (Xe**2) for xi in range(Nx-1)])
+def Bx(T): # K -> 1
+    return 1 - 2*Ax(T)
 
 P_c = np.zeros(Nx-1)
 for xi in range(Nx-1):
@@ -63,7 +61,9 @@ T[:, 0] = T0
 if hyp == 'A': hypA(T)
 
 for ti in range(Nt):
-    T[1:Nx, ti+1] = Ax * (T[:Nx-1, ti] + T[2:, ti]) + Bx * T[1:Nx, ti] + Te * P_c
+    A = Ax(T[:, ti])
+    B = Bx(T[:, ti])
+    T[1:Nx, ti+1] = A * (T[:Nx-1, ti] + T[2:, ti]) + B * T[1:Nx, ti] + Te * P_c
     if hyp == 'B': hypB(T, ti)
 
-plot(T, Lp, L, La, Nx, Nt)
+plot(T, Lp, L, La, Nx, Nt, dilt=dilt)
