@@ -3,11 +3,10 @@ import matplotlib.pyplot as plt
 from constantes import celsius, kelvin, T0
 
 dil = 100 # facteur de dilatation des longueurs
-dilt = 1 # facteur de dilatation temporelle
 fig = plt.figure()
 ax = fig.add_subplot()
 
-def plot_courbes(T, La, Nx, Nt):
+def plot_courbes(T, La, Nx, Nt, dilt):
     Ncourbes = 10
     positions = np.linspace(0, La*dil, Nx+1)
     c = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'black', 'grey', 'cyan']
@@ -28,9 +27,10 @@ def legende(L):
     plt.xlabel('x (en cm)')
     plt.ylabel('T (en °C)')
 
-def plot(T, Lp, L, La, Nx, Nt):
+def plot(T, Lp, L, La, Nx, Nt, dilt=1):
+    # dilt est le facteur de dilatation temporelle
     Tmax = max(T[:, int(Nt/dilt)])
-    plot_courbes(T, La, Nx, Nt)
+    plot_courbes(T, La, Nx, Nt, dilt)
     plot_zones(Tmax, Lp, L, La)
     legende(L)
     plt.show()
