@@ -47,41 +47,47 @@ I3=I[i2:]
 
 
 
-# Data for a three-dimensional line
-zdata = np.array(I)
-xdata = np.array(K)
+U = 5 # V
+r = 500 # unité de conversion des calculs
+zdata = U*np.array(I)
+xdata = r*np.array(K)
 ydata = np.array(T)
 
-z1data = np.array(I1)
-x1data = np.array(K1)
+z1data = U*np.array(I1)
+x1data = r*np.array(K1)
 y1data = np.array(T1)
 
-z2data = np.array(I2)
-x2data = np.array(K2)
+z2data = U*np.array(I2)
+x2data = r*np.array(K2)
 y2data = np.array(T2)
 
-z3data = np.array(I3)
-x3data = np.array(K3)
+z3data = U*np.array(I3)
+x3data = r*np.array(K3)
 y3data = np.array(T3)
 
 
 #Solution
 
 
-grilleX, grilleY = np.meshgrid(K2, T2)
+"""grilleX, grilleY = np.meshgrid(K2, T2)
 A= np.hstack((transfo(T2), transfo(K2), np.ones_like(transfo(T2))))
 res= np.linalg.lstsq(A, transfo(I2))
 aopt,bopt,copt=res[0]
 ax.plot_surface(grilleX, grilleY, plan(grilleX, grilleY, (aopt, bopt, copt)), alpha=0.8)
 
+print (res)"""
+# ax.scatter3D(xdata, ydata, zdata, color='black')
 
-print (res)
-#ax.scatter3D(xdata, ydata, zdata, color='black')
+ax.scatter3D(x1data, y1data, z1data, color='black', label='séance 3')
 
-#ax.scatter3D(x1data, y1data, z1data, color='black')
+ax.scatter3D(x2data, y2data, z2data, color='red', label='séance 2')
 
-ax.scatter3D(x2data, y2data, z2data, color='red')
+ax.scatter3D(x3data, y3data, z3data, color='green', label='séance 1')
 
-ax.scatter3D(x3data, y3data, z3data, color='green')
+ax.set_xlabel('Calculs (par seconde)', fontweight ='bold')
+ax.set_ylabel('Température (°C)', fontweight ='bold')
+ax.set_zlabel('Puissance (W)', fontweight ='bold')
+
+ax.legend()
 
 plt.show()
