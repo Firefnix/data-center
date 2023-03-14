@@ -1,6 +1,5 @@
 from mpl_toolkits import mplot3d
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 fig = plt.figure()
@@ -15,7 +14,6 @@ def transfo (L):
         l.append([i])
     return l
 
-
 def Trouvermax(l):
     return max((l[i],i) for i in range (len(l)))
 
@@ -29,62 +27,39 @@ def Supp(x):
 def plan(x, y, A):
     return A[0]*x + A[1]*y + A[2]
 
-Supp(3)
-i1=19
-i2=18+19
-
-T1=T[:i1]
-T2=T[i1:i2]
-T3=T[i2:]
-
-K1=K[:i1]
-K2=K[i1:i2]
-K3=K[i2:]
-
-I1=I[:i1]
-I2=I[i1:i2]
-I3=I[i2:]
-
-
+Supp(3) # on supprime 3 valeurs aberrantes
+i1 = 19
+i2 = 18 + 19
 
 U = 5 # V
-r = 500 # unité de conversion des calculs
-zdata = U*np.array(I)
-xdata = r*np.array(K)
-ydata = np.array(T)
+r = 500e-6 # unité de conversion des calculs
+T1, T2, T3 = np.array(T[:i1]), np.array(T[i1:i2]), np.array(T[i2:])
+K1, K2, K3 = r*np.array(K[:i1]), r*np.array(K[i1:i2]), r*np.array(K[i2:])
+I1, I2, I3 = np.array(I[:i1]), np.array(I[i1:i2]), np.array(I[i2:])
+P1, P2, P3 = U*I1, U*I2, U*I3
 
-z1data = U*np.array(I1)
-x1data = r*np.array(K1)
-y1data = np.array(T1)
+T23 = np.array(T[i1:i2] + T[i2:])
+K23 = r*np.array(K[i1:i2] + K[i2:])
+I23 = np.array(I[i1:i2] + I[i2:])
+P23 = U*I23
 
-z2data = U*np.array(I2)
-x2data = r*np.array(K2)
-y2data = np.array(T2)
-
-z3data = U*np.array(I3)
-x3data = r*np.array(K3)
-y3data = np.array(T3)
-
-
-#Solution
-
-
-"""grilleX, grilleY = np.meshgrid(K2, T2)
-A= np.hstack((transfo(T2), transfo(K2), np.ones_like(transfo(T2))))
-res= np.linalg.lstsq(A, transfo(I2))
+A = np.hstack((transfo(T23), transfo(K23), np.ones_like(transfo(T23))))
+res = np.linalg.lstsq(A, transfo(P23))
 aopt,bopt,copt=res[0]
-ax.plot_surface(grilleX, grilleY, plan(grilleX, grilleY, (aopt, bopt, copt)), alpha=0.8)
-
-print (res)"""
+# ax.plot_surface(grilleX, grilleY, plan(grilleX, grilleY, (aopt, bopt, copt)), alpha=0.8)
+Z = aopt * T23 + bopt * K23 + copt
+ax.plot_trisurf(K23, T23, Z, linewidth=0.2, alpha=0.3, antialiased=True)
+print(f'a: {aopt}, b: {bopt}, c: {copt}')
+# print(res)
 # ax.scatter3D(xdata, ydata, zdata, color='black')
 
-ax.scatter3D(x1data, y1data, z1data, color='black', label='séance 3')
+# ax.scatter3D(K1, T1, P1, color='black', label='séance 3')
 
-ax.scatter3D(x2data, y2data, z2data, color='red', label='séance 2')
+ax.scatter3D(K2, T2, P2, color='red', label='séance 2')
 
-ax.scatter3D(x3data, y3data, z3data, color='green', label='séance 1')
+ax.scatter3D(K3, T3, P3, color='green', label='séance 1')
 
-ax.set_xlabel('Calculs (par seconde)', fontweight ='bold')
+ax.set_xlabel('Calculs (millions par seconde)', fontweight ='bold')
 ax.set_ylabel('Température (°C)', fontweight ='bold')
 ax.set_zlabel('Puissance (W)', fontweight ='bold')
 
