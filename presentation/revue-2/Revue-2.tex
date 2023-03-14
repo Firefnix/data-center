@@ -1,0 +1,517 @@
+\documentclass[a4paper,11pt]{beamer}
+%	\documentclass[a4paper,11pt,handout]{beamer}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%      Les packages de base                %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[utf8]{inputenc}  % pour taper directement les accents
+\usepackage[T1]{fontenc}     % pour inclure les polices avec accents et gérer la césure des mots
+\usepackage[frenchb]{babel}	 % pour utiliser les règles de la typographie française
+\usepackage{mathtools,amssymb,amsfonts}	% plus de math :-)
+\usepackage{graphicx}	% c'est pour \includegraphics et \graphicspath
+\graphicspath{ {../images/} }
+\usepackage{lastpage}   % \cfoot{\thepage $/$ \pageref{LastPage}}
+\usepackage{ifthen}     % pour \ifthenelse
+\usepackage{physics}
+% \usepackage{derivative}
+\usepackage{pythonhighlight} % coloration
+\definecolor{keywordcolour}{HTML}{5e81ac}
+\definecolor{literatecolour}{HTML}{5e81ac}
+\definecolor{stringcolour}{HTML}{008000}
+\usepackage{listingsutf8}
+\lstset{
+    basicstyle=\small\ttfamily,
+    columns=flexible,
+    breaklines=true
+}
+
+\usepackage[locale = FR]{siunitx} % les unités PROPRES
+\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
+
+\usepackage{pgfplots}  % environnement axis
+\pgfplotsset{compat=1.15}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}  % pour faire des calculs sur les coordonnées ($(A)+(45:3)$)
+
+\usepackage{tikzelec}  % package maison pour dessiner les circuits électroniques
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  Pour numeroter les pages                %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamertemplate{navigation symbols}{}
+%=======================================================
+% Pour numéroter les diapos :
+\setbeamertemplate{footline}[frame number]
+%=======================================================
+% Pour numéroter les diapos en choissant le numéro de la dernière
+% dans ce cas enlever la commande \setbeamertemplate{footline}[page number]
+% et utiliser les deux lignes suivantes
+\newcommand {\NumeroDerniereDiapo} {22}
+%\addtobeamertemplate{footline}{\hfill\insertframenumber\,/\,\NumeroDerniereDiapo\hspace{2mm}\null\vspace{1mm}}
+%=======================================================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  Pour positionner les choses où on veut  %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[absolute,showboxes,overlay]{textpos}
+\textblockorigin{10mm}{10mm} % origine des positions
+\setlength{\TPHorizModule}{1mm} % échelle horizontale
+\setlength{\TPVertModule}{\TPHorizModule} % échelle verticale identique à l'horizontale
+
+% à ajouter dans les frames pour positioner les objets
+% \begin{textblock}{largeur}(x,y) (les nombres sont en mm) :
+%
+%%\TPshowboxestrue  % (par défaut) les boites sont visibles
+%%\TPshowboxesfalse % décommenter pour faire disparaitre les boites
+%
+%\begin{textblock}{115}(-3,10)
+%bla bla
+%\end{textblock}
+%
+
+
+\newenvironment{tikzgrille}[1][0]{
+% 1 pour afficher la grille / 0 pour ne pas l'afficher = option par défaut
+\begin{textblock}{180}[.5,.5](54,38)
+\begin{tikzpicture}
+\draw (-9,-9) rectangle (9,9);
+\ifthenelse {#1=1} {\begin{scope}[magenta!60]
+\draw (-9,-9) grid (9,9);
+\fill (0,0) circle (.05);
+\fill (1,0) circle (.05);
+\fill (0,1) circle (.05);
+\node[anchor=text] at (0.1,0.2) {\footnotesize $(0,0)$};
+\node[anchor=text] at (1.1,0.2) {\footnotesize $(1,0)$};
+\node[anchor=text] at (0.1,1.2) {\footnotesize $(0,1)$};
+\end{scope}} {} }
+{\end{tikzpicture}\end{textblock}}
+
+\newcommand{\eff}{_\text{eff}}
+\newcommand{\moy}{\expval}
+\newcommand{\cel}{\degreeCelsius}
+\newcommand{\p}{\texttt} % Stylisé comme du code.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Consommation électrique d'un data-center}
+\author{Malo Leroy, Ulysse Tanguy-Bompard}
+
+\begin{document}
+
+%=====================================================
+%=====================================================
+%=====================================================
+
+\maketitle % diapo-titre
+
+
+\begin{frame}
+\frametitle{Ancrage au thème et motivation}
+
+\includegraphics[width=0.55\textwidth]{carte_data_center.png}
+
+Ancrage : plus de la moitié des \textit{data center} français sont en zone urbaine
+
+Motivation : écologie, enjeux économiques
+\end{frame}
+
+\begin{frame}
+    \frametitle{Plan}
+    \begin{enumerate}
+        \item Modélisation d'un ordinateur
+        \item Grandeurs caractéristiques
+        \item Puissance consommée
+        \item Simulation d'un data center
+        \item Répartition optimale avec l'algorithme du gradient (non fait)
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Modélisation d'un ordinateur}
+    \framesubtitle{modèles qui n'ont pas étés retenus}
+
+    \begin{columns}
+        \def \x {0} % origine
+        \def \xa {2}
+        \def \xb {4.5}
+        \def \xc {6}
+
+        \def \y {0} % origine
+    \begin{column}{0.25\textwidth}
+        $U\eff = \SI{230}{V}$
+
+        $I\eff = \SI{0,20}{A}$
+
+        \includegraphics[width=0.8\textwidth]{wattmetre.jpg}
+        Ordinateur de bureau complet
+    \end{column}
+    \vrule{}
+    \begin{column}{0.375\textwidth}
+        $R_1 = \SI{1,6}{k\ohm}$
+        $C_1 = \SI{1,9}{\micro F}$
+    \begin{tikzelec}
+        \draw (\x, \y)--(\xc, \y);
+        \TikzelecResistance \xa \y
+        \TikzelecNom {$R_1$}    {0}   {1}
+        \TikzelecCondensateur \xb \y+6
+        \TikzelecNom {$C_1$}    {0}   {1}
+
+        \end{tikzelec}
+        \begin{tikzelec}
+        % Suite
+        \draw (\x, \y)--(\xc, \y);
+
+        \TikzelecResistance \xa \y
+        \TikzelecNom {$R_3$}    {0}   {1}
+
+        \TikzelecBobine \xb \y
+        \TikzelecNom {$L$}    {0}   {1}
+    \end{tikzelec}
+    $R_3 = \SI{800}{\ohm}$
+    $L = \SI{2,6}{H}$
+    \end{column}
+    \begin{column}{0.375\textwidth}
+        $R_2 = \SI{1,6}{k\ohm}$
+
+        $C_2 = \SI{2,0}{\micro F}$
+        \def \xe {3}
+        \def \xf {4}
+        \def \yd {-2}
+        \begin{tikzelec}
+            \draw (\x, \y)--(\xf+1, \y);
+            \draw (\xa-1, \y)--(\xa-1, \yd);
+            \draw (\xa-1, \yd)--(\xf, \yd);
+            \draw (\xf, \yd)--(\xf, \y);
+
+            \TikzelecCondensateur {\xa+.5} \y
+            \TikzelecNom {$C_2$}    {0}   {1}
+
+            \TikzelecResistance {\xa+.5} \yd
+            \TikzelecNom {$R_2$}    {0}   {-1}
+        \end{tikzelec}
+    \end{column}
+    \end{columns}
+\end{frame} % modélisation
+
+\begin{frame}
+    \frametitle{Modélisation d'un ordinateur}
+    \framesubtitle{Désavantages des modèles non retenus}
+
+    \begin{itemize}
+        \item Ordinateur de bureau
+        \begin{itemize}
+            \item Dangereux (230 V)
+            \item Grande inertie thermique
+        \end{itemize}
+        \item Circuit équivalent
+        \begin{itemize}
+            \item Grandeurs non variables (calculs, température)
+            \item Définition de la température difficile
+        \end{itemize}
+    \end{itemize}
+\end{frame} % désavantages des modèles non retenus
+
+\begin{frame}
+    \frametitle{Modélisation d'un ordinateur}
+    \framesubtitle{Modèle retenu : Raspberry Pi}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Avantages
+            \begin{itemize}
+                \item Peu dangereux
+                \item Réponse rapide aux perturbations
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=0.8\textwidth]{raspberry_pi.jpg}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grandeurs caractéristiques}
+
+    \begin{itemize}
+        \item Masse volumique $\rho$
+        \item Capacité thermique $C$
+        \item Conductivité thermique $\lambda$ (non fait)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Masse volumique}
+
+    Dimensions (au vernier) 85,60 mm × 53,98 mm × 17 mm
+
+    Masse (vendeur) 45 g
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Capacité thermique}
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node at (0, 0) {\includegraphics[width=0.7\textwidth]{tp-3.jpg}};
+            \node at (-2, -4) {Calorimètre};
+            \node at (6, 1.5) {Carte Sysam};
+            \node at (6, 0) {Alimentation};
+            \node at (2, -4) {Raspberry Pi (dans le calorimètre)};
+            \node at (6, -4) {Ampèremètre};
+            \node at (6, -2) {Thermocouple};
+
+            \draw[->, line width=1mm] (-2, -3.5) -- (-2, 0); % Cal
+            \draw[->, line width=1mm] (4.5, 1.5) -- (0, 0.5); % CS
+            \draw[->, line width=1mm] (4.5, 0) -- (2.5, 0.5); % Ali
+            \draw[->, line width=1mm] (0, -3.5) -- (-1.75, -0.5); % Rpi
+            \draw[->, line width=1mm] (4.5, -2) -- (1.4, -0.4); % T
+            \draw[->, line width=1mm] (6, -3.7) -- (0, -1); % A
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Masse en eau du calorimètre}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Protocole
+            \begin{enumerate}
+                \item Le laboratoire est initialement à $\SI{20}{\cel}$
+                \item On met dans le calorimètre 200 g d'eau chaude à $\SI{52}{\cel}$
+                \item On mesure après thermalisation (pas trop longue pour éviter les fuites thermiques) la température de l'eau $T_\text{f} = \SI{47}{\cel}$
+            \end{enumerate}
+        \end{column}
+        \vrule{}
+        \begin{column}{0.5\textwidth}
+            (1\ier{} principe) $\Delta U = C \Delta T$
+            Résultats
+            \begin{itemize}
+                \item Masse en eau $m_\text{calo} = \SI{37}{g}$
+                \item Capacité thermique $C_\text{calo} = \SI{167}{J/K}$
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Capacité thermique du Raspberry Pi}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Protocole
+            \begin{enumerate}
+                \item Avant calculs, $\moy{T}_\text{i} = \SI{18,98}{\cel}$ et intensité moyenne de 288 mA
+                \item Lancement des calculs à $t = \SI{1}{min}$
+                \item Fin des calculs à $t = \SI{381,6}{s}$. Pendant les calculs, on a
+                \begin{itemize}
+                    \item la tension 5 V
+                    \item intensité moyenne 381 mA
+                    \item le travail électrique $W = \SI{612}{J}$
+                \end{itemize}
+                \item Thermalisation : sur les 100 dernières secondes, $\SI{20,63}{\cel}$
+            \end{enumerate}
+        \end{column}
+        \vrule{}
+        \begin{column}{0.5\textwidth}
+            (1\ier{} principe) $\Delta U = W = C \Delta T$
+            Résultats
+            \begin{itemize}
+                \item Capacité thermique $C = \SI{204}{J/K}$
+                \item Capacité thermique massique $c = \SI{4,5}{kJ.K^{-1}.kg^{-1}}$
+            \end{itemize}
+            Commentaires
+            \begin{itemize}
+                \item valeur élevée (ex. Silicium )
+                \item masse de la carcasse
+                \item pertes thermiques (10 min)
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+
+    \begin{enumerate}
+        \item Définition de la quantité de calcul
+        \item Mesure de la consommation du Raspberry Pi
+        \item Régression linéaire
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Puissance consommée}
+    \framesubtitle{Définition de la quantité de calcul}
+
+    \begin{itemize}
+        \item Défini à une constante près (au repos, $K = 0$)
+        \item Unité standard : \textit{floating-point operation}
+        \item Un calcul est une opération sur des flottants
+        \begin{python}
+def calculs(n):
+    for _ in range(n):
+        a, b = 60986.5150141834, 2831540.2372984355
+        c = a ** (-b)
+        \end{python}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Mesure de l'intensité}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Protocole
+            \begin{enumerate}
+                \item On influe sur la température (glace, lampe de chantier)
+                \item On impose la quantité de calculs
+                \item On mesure l'intensité consommée
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}
+                \node at (0, 0) {\includegraphics[width=\textwidth]{TP-2.3bis.jpg}};
+
+                \node at (1, 3) {Raspberry Pi};
+                \node at (1.5, -4) {Glace};
+                \node at (-1, -4) {Lampe de chantier};
+
+                \draw[->, line width=1mm] (1.5, -3.5) -- (1.9, -1.5); % gl
+                \draw[->, line width=1mm] (1, 2.5) -- (1.9, -1); % rpi
+                \draw[->, line width=1mm] (-1, -3.5) -- (-2.6, -1.2); % lampe
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Résultats expérimentaux}
+
+    \includegraphics[width=0.9\textwidth]{tous_les_points.png}
+
+    Problème : on a « deux plans »
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Résultats expérimentaux}
+
+    \includegraphics[width=0.7\textwidth]{colorisee.png}
+
+    Sans doute une erreur systématique (par exemple : placement du thermomètre, calculs au repos différents)
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Régression linéaire}
+
+    \begin{itemize}
+        \item Allure de plan
+        $$P = a \times K + b \times T + c$$
+        \item Régression linéaire avec \p{np.linalg.lstsq}
+        \begin{itemize}
+            \item $a = \SI{5.1e-4}{W/K}$
+            \item $b = \SI{3.4e-7}{W/\text{calcul par seconde}}$
+            \item $c = \SI{0.73}{W}$
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Régression linéaire}
+
+    \includegraphics[width=0.7\textwidth]{plan.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Hypothèses}
+
+    \begin{itemize}
+        \item Carcasse de l'ordinateur : pavé uniforme
+        \item Source thermique : pavé centré sur la carcasse
+        \begin{itemize}
+            \item Puissance volumique uniforme
+        \end{itemize}
+        \item Air extérieur
+        \begin{itemize}
+            \item Pas de convection (seulement la conduction)
+            \item Conductivité dépendant de la température
+            \item Masse volumique dépendant de la température
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Principe de l'aglorithme}
+
+    \begin{itemize}
+        \item Temps et espace discrétisés
+        \item Température : tableau \p{numpy}
+        \begin{itemize}
+            \item 1D \p{T[x, t]} (cylindre)
+            \item 2D \p{T[x, y, t]} (plan épais)
+        \end{itemize}
+        \item Équation différentielle (1D)
+            $$\pdv{T}{t} = D(x) \pdv[2]{T}{x} + P_c(x) \quad \text{où} \quad P_c(x) = \frac{P_v}{\rho c}$$
+        \item Traduction informatique (1D)
+        \begin{python}
+T[xi, ti+1] = T[xi, ti] + (t_e / (x_e**2)) * D(xi)
+    (T[xi+1, ti] - T[xi, ti] + T[xi-1, ti])
+    + P_c(xi) * t_e
+        \end{python}
+        \item Deux hypothèses
+        \begin{enumerate}[A]
+            \item Air à température constante
+            \item Enceinte calorifugée (avec air)
+        \end{enumerate}
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Résultats pour l'hypothèse A}
+
+    \includegraphics[width=\textwidth]{hypA_C1.67.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Résultats pour l'hypothèse B}
+
+    \includegraphics[width=\textwidth]{hypB_C1.67.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Ce qui reste à faire}
+
+    \begin{itemize}
+        \item Simulation à 2D puis à 3D
+        \item Détermination de la conductivité thermique du Raspberry Pi
+        \item Répartition optimale avec l'algorithme du gradient
+        \begin{itemize}
+            \item Répartition des calculs entre les ordinateurs
+            \item Répartition spatiale des ordinateurs
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+%=====================================================
+%=====================================================
+%=====================================================
+
+\end{document}
