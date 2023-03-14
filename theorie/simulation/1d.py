@@ -3,14 +3,14 @@ import numpy as np
 from plot1d import plot
 from constantes import T0, Da, D, c
 
-hyp = 'A' # hypothèse
+hyp = 'B' # hypothèse
 print(f'Hypothèse {hyp}')
 
 La, L, Lp = 1, 1e-1, 1e-2 # m
 if hyp == 'A': La = L
 S = 1e-4 # m^2
 tau = La**2 / D # s
-dilt = 1
+dilt = 15
 print(f'τ = {tau/dilt:.2f} s')
 Nx = 100
 
@@ -20,7 +20,8 @@ Te = tau / Nt
 print(f'Discrétisation espace×temps, {Nx}×{Nt}')
 
 P = 0.5 # W
-Cp = c * S * Lp # J.K^-1
+Cp = 1.67 #  * S * Lp # J.K^-1
+print(f'Capacité thermique du processeur : {Cp} J/K')
 
 class Zone(Enum):
     source = auto()
@@ -66,4 +67,4 @@ for ti in range(Nt):
     T[1:Nx, ti+1] = A * (T[:Nx-1, ti] + T[2:, ti]) + B * T[1:Nx, ti] + Te * P_c
     if hyp == 'B': hypB(T, ti)
 
-plot(T, Lp, L, La, Nx, Nt, dilt=dilt)
+plot(T, Lp, L, La, Nx, Nt, tau, dilt=dilt)

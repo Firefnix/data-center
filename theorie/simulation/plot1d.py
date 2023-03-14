@@ -6,13 +6,13 @@ dil = 100 # facteur de dilatation des longueurs
 fig = plt.figure()
 ax = fig.add_subplot()
 
-def plot_courbes(T, La, Nx, Nt, dilt):
+def plot_courbes(T, La, Nx, Nt, tau, dilt):
     Ncourbes = 10
     positions = np.linspace(0, La*dil, Nx+1)
     c = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'black', 'grey', 'cyan']
     for n in range(Ncourbes):
         plt.plot(positions, T[:, int(Nt/dilt*(n/Ncourbes)**2)] - kelvin(0), color=c[n],
-            label=f't = {(n/Ncourbes)**2:.2f} τ')
+            label=f't = {(n/Ncourbes)**2*(tau/dilt):.2f} s')
 
 def plot_zones(Tmax, Lp, L, La):
     plt.vlines(x=[dil*(La-Lp)/2, dil*(La+Lp)/2], ymin=celsius(T0),
@@ -27,10 +27,10 @@ def legende(L):
     plt.xlabel('x (en cm)')
     plt.ylabel('T (en °C)')
 
-def plot(T, Lp, L, La, Nx, Nt, dilt=1):
+def plot(T, Lp, L, La, Nx, Nt, tau, dilt=1):
     # dilt est le facteur de dilatation temporelle
     Tmax = max(T[:, int(Nt/dilt)])
-    plot_courbes(T, La, Nx, Nt, dilt)
+    plot_courbes(T, La, Nx, Nt, tau, dilt)
     plot_zones(Tmax, Lp, L, La)
     legende(L)
     plt.show()
