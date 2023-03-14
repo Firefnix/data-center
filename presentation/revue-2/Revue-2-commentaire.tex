@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[locale = FR]{siunitx} % les unités PROPRES
+\sisetup{inter-unit-product = \ensuremath{{}\cdot{}}}
+
+\newcommand*{\eff}{_\text{eff}}
+\newcommand{\fleche}{$\Rightarrow {}$}
+
+\title{Commentaires sur la revue 1}
+\author{Groupe 10, MP*}
+
+\begin{document}
+
+\maketitle
+
+\textit{Ce document est une liste des remarques et suggestions qui ont été faites par M. Delannoy lors de la 1 revue de TIPE, qui s'est tenue le 14 mars 2023.}
+
+\vspace{1cm}
+
+\begin{itemize}
+    \item Faire apparaître l'objectif du TIPE
+    \item Expliquer d'où sortent les valeurs du modèle par circuits \fleche une formule pour un type de circuit (e.g. le $L/R$)
+    \item Dire « inconvénients » plutôt que « désavantages »
+    \item Diapositive 5 : suppr. « définition de la température difficile » et clarifier la raison d'abandon du modèle par circuit (on n'a pas accès à R(K, T) et à C(K, T))
+    \item « Modèle »: pas le bon terme pour le Raspberry Pi \fleche les circuits étaient une impasse
+    \item Parler de masse volumique \textbf{moyenne}
+    \item Parler de conductivité thermique \textbf{moyenne}
+    \item Parler de capacité thermique massique \textbf{moyenne}
+    \item « Vernier » : on s'en fiche
+    \item Protocole pour la masse en eau : préciser qu'on est sans le Raspberry Pi
+    \item Deux C.S. seulement : $\SI{1,7e2}{J/K}$
+    \item Thermomètre : dire que le capteur est dans le boîtier du Raspberry Pi
+    \item Mettre les courbes $T(t)$ et $I(t)$
+    \item Mettre la masse totale avec carcasse
+    \item On \textbf{modifie} la température
+    \item On mesure l'intensité \textbf{moyenne}
+    \item Présenter d'abord des « coupes » plutôt que de montrer le graphe en volume directement \fleche $P(K)$, $P(T)$
+    \item Pour la vue avec le plan obtenu par régression linéaire : orienter la vue de manière à ne voir que la tranche du plan
+    \item Parler de \textbf{diffusion} thermique plutôt que de conduction
+    \item Ne pas désigner une équation aux dérivées partielles comme étant une équation différentielle
+\end{itemize}
+
+\end{document}
