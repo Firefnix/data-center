@@ -37,27 +37,53 @@ T1, T2, T3 = np.array(T[:i1]), np.array(T[i1:i2]), np.array(T[i2:])
 K1, K2, K3 = r*np.array(K[:i1]), r*np.array(K[i1:i2]), r*np.array(K[i2:])
 I1, I2, I3 = np.array(I[:i1]), np.array(I[i1:i2]), np.array(I[i2:])
 P1, P2, P3 = U*I1, U*I2, U*I3
-
+If= [0.254,0.274,0.292,0.31,0.324,0.35,0.377,0.385,0.275,0.279,0.3,0.318,0.34,0.355,0.375]
+Kf= [0,500,1000,1500,2000,2500,3000,3000,0,500,1000,1500,2000,2500,3000]
+Tf= [29.7,31.7,33.2,37.5,37.7,38.8,40.78,68.359,62.35,57,56.787,67.3,73.482,67.988,68.296]
+I4 = np.array(If)
+K4 = r*np.array(Kf)
+T4 = np.array(Tf)
+P4 = U*I4
 T23 = np.array(T[i1:i2] + T[i2:])
 K23 = r*np.array(K[i1:i2] + K[i2:])
 I23 = np.array(I[i1:i2] + I[i2:])
 P23 = U*I23
-
+#plan final
+Td = np.array(T[:i1] + Tf)
+Kd = r*np.array(K[:i1] + Kf)
+Id = np.array(I[:i1] + If)
+Pd = U*Id
+# Premier plan
 A = np.hstack((transfo(T23), transfo(K23), np.ones_like(transfo(T23))))
 res = np.linalg.lstsq(A, transfo(P23))
 aopt,bopt,copt=res[0]
-# ax.plot_surface(grilleX, grilleY, plan(grilleX, grilleY, (aopt, bopt, copt)), alpha=0.8)
+#Deuxième plan
+Ad = np.hstack((transfo(Td), transfo(Kd), np.ones_like(transfo(Td))))
+resd = np.linalg.lstsq(Ad, transfo(Pd))
+ad,bd,cd=resd[0]
+
+#Affichage 1er plan
 Z = aopt * T23 + bopt * K23 + copt
 ax.plot_trisurf(K23, T23, Z, linewidth=0.2, alpha=0.3, antialiased=True)
 print(f'a: {aopt}, b: {bopt}, c: {copt}')
+
+#affichage 2em plan
+Zd = ad * Td + bd * Kd + cd
+ax.plot_trisurf(Kd, Td, Zd, linewidth=0.2, alpha=0.3, antialiased=True)
+print(f'a: {ad}, b: {bd}, c: {cd}')
+
+
 # print(res)
 # ax.scatter3D(xdata, ydata, zdata, color='black')
-
-# ax.scatter3D(K1, T1, P1, color='black', label='séance 3')
+ax.scatter3D(K1, T1, P1, color='black', label='séance 3')
 
 ax.scatter3D(K2, T2, P2, color='red', label='séance 2')
 
+ax.scatter3D(K4, T4, P4, color='blue', label='séance 4')
+
 ax.scatter3D(K3, T3, P3, color='green', label='séance 1')
+
+
 
 ax.set_xlabel('Calculs (millions par seconde)', fontweight ='bold')
 ax.set_ylabel('Température (°C)', fontweight ='bold')
