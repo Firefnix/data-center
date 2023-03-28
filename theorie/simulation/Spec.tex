@@ -23,7 +23,7 @@
 \definecolor{keywordcolour}{HTML}{5e81ac}
 \definecolor{literatecolour}{HTML}{5e81ac}
 \definecolor{stringcolour}{HTML}{008000}
-\usepackage{listings}
+\usepackage{listingsutf8}
 \lstset{
     basicstyle=\small\ttfamily,
     columns=flexible,
@@ -31,6 +31,8 @@
 }
 
 \usepackage{tikz}
+\definecolor{nord10}{RGB}{94,129,172}
+\definecolor{nord11}{RGB}{191,97,106}
 
 \newcommand{\p}{\texttt} % Stylisé comme du code.
 \newcommand{\air}{$\Lambda$\xspace}
@@ -39,6 +41,9 @@
 \newcommand{\ordi}{$\Sigma$\xspace}
 \newcommand{\etdt}{entre $t$ et $t + \dd t$\xspace}
 \newcommand{\exdx}{entre $x$ et $x + \dd x$\xspace}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
 
 \title{Simulation : cahier des charges}
 \author{Malo Leroy -- Ulysse Tanguy--Bompard}
@@ -156,6 +161,24 @@ La condition aux limites est cette fois dynamique : on impose une « continuité
 Ci-dessus se trouve une visualisation des résultats sous l'hypothèse d'une puissance constante $P = \SI{500}{mW}$. Pour $\tau = \SI{11}{s}$, on a un résultat équivalent à celui obtenu dans le cadre de l'hypothèse A en raison de la faible valeur de $\tau$. Ce n'est plus le cas pour des temps d'échelle plus grands, ci-dessus avec $\tau = \SI{3}{h}$, qui permettent d'observer le comportement du système en régime permanent.
 
 \includegraphics[scale=0.37]{1dB_P500mW_t11000s.png}
+
+
+\subsection{Modèle bidimensionnel}
+
+L'espace est un plan $(Oxy)$, fini et d'extension totale un carré de côté $l_a = \SI{1}{m}$, si besoin considéré d'épaisseur $e = \SI{1}{cm}$, mais les grandeurs en jeu ne dépendent spatialement que de $x$ et $y$. L'ordinateur est représenté par un carré de côté $l = \SI{10}{cm}$, et le processeur par un carré de côté $l_p = \SI{1}{cm}$ centré sur le reste de l'ordinateur.
+
+\begin{tikzpicture}[scale=0.50]
+    \draw (0, 0) rectangle (9, 9);
+    \fill[nord10] (2, 2) rectangle (7, 7);
+    \fill[nord11] (4, 4) rectangle (5, 5);
+    \node at (10, 8) {$l_a$};
+    \node[nord10] at (8, 7) {$l$};
+    \node[nord11] at (6, 6) {$l_p$};
+\end{tikzpicture}
+
+L'équation obtenue est, par le même travail que précédemment
+
+$$\pdv{T}{t} = D(x, y) \left( \pdv[2]{T}{x} + \pdv[2]{T}{y} \right)+ P_c$$
 
 \section*{Annexe : notations}
 
