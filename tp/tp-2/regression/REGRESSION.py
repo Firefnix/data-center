@@ -83,6 +83,23 @@ ax.scatter3D(K4, T4, P4, color='blue', label='séance 4')
 
 ax.scatter3D(K3, T3, P3, color='green', label='séance 1')
 
+#Version on met tout au même plan
+
+lamda= abs(cd-copt)/2
+Ireg= np.concatenate((I23 + lamda/U,Id - lamda/U))
+Treg = np.concatenate((T23 , Td))
+Kreg = np.concatenate((K23, Kd ))
+Preg=U*Ireg
+
+Areg = np.hstack((transfo(Treg), transfo(Kreg), np.ones_like(transfo(Treg))))
+resreg = np.linalg.lstsq(Areg, transfo(Preg))
+areg,breg,creg=resreg[0]
+
+ax.scatter3D(Kreg, Treg, Preg, color='pink', label='reg')
+
+Zreg = areg * Treg + breg * Kreg + creg
+ax.plot_trisurf(Kreg, Treg, Zreg, linewidth=0.2, alpha=0.3, antialiased=True)
+print(f'a: {areg}, b: {breg}, c: {creg}')
 
 
 ax.set_xlabel('Calculs (millions par seconde)', fontweight ='bold')
