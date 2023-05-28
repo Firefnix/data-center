@@ -37,7 +37,7 @@ if __name__ == '__main__':
     print(f'T0 = {T0} K = {celsius(T0)} °C')
     print(f'ρ = {rho} kg.m^-3')
     print(f'ρ_a = {rho_a0:.2f} kg.m^-3 [à T0]')
-    print(f'λ = {G} W.m^-1.K^-1')
+    print(f'λ = {G:.2e} W.m^-1.K^-1')
     print(f'λ_a = {Ga0:.2e} W.m^-1.K^-1 [à T0]')
     print(f'D = {D:.2e} m^2/s')
     print(f'D_a = {Da0:.2e} m^2/s [à T0]')
