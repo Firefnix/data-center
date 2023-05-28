@@ -1,0 +1,74 @@
+\documentclass{article}
+
+\usepackage[french]{babel} % langue
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xspace} % espacement
+\usepackage{physics} % dérivées
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\usepackage{siunitx}
+\sisetup{
+    detect-all,
+    output-decimal-marker={,},
+    group-minimum-digits = 3,
+    group-separator={~},
+    number-unit-separator={~},
+    inter-unit-product={~}
+}
+\newcommand{\cel}{\degreeCelsius}
+
+\usepackage{pythonhighlight} % coloration
+\definecolor{keywordcolour}{HTML}{5e81ac}
+\definecolor{literatecolour}{HTML}{5e81ac}
+\definecolor{stringcolour}{HTML}{008000}
+\usepackage{listingsutf8}
+\lstset{
+    basicstyle=\small\ttfamily,
+    columns=flexible,
+    breaklines=true
+}
+
+\usepackage{tikz}
+\definecolor{nord10}{RGB}{94,129,172}
+\definecolor{nord11}{RGB}{191,97,106}
+
+\newcommand{\p}{\texttt} % Stylisé comme du code.
+\newcommand{\air}{$\Lambda$\xspace}
+\newcommand{\cair}{C_{\Lambda}}
+\newcommand{\tair}{T_{air}}
+\newcommand{\ordi}{$\Sigma$\xspace}
+\newcommand{\etdt}{entre $t$ et $t + \dd t$\xspace}
+\newcommand{\exdx}{entre $x$ et $x + \dd x$\xspace}
+
+\title{Algorithme du gradient : cahier des charges}
+\author{Malo Leroy -- Ulysse Tanguy--Bompard}
+
+\begin{document}
+
+\maketitle
+
+\section{Objectifs}
+
+On cherche à minimiser la puissance totale consommée par plusieurs ordinateurs dans une même pièce (un \textit{datacenter}) à quantité de calculs constants, en fonction de la répartition spatiale des ordinateurs et de la répartition de la quantité de calculs.
+
+On va utiliser pour cela l'\textbf{algorithme du gradient}, qui sert à minimiser une fonction $f(x_1, ..., x_n)$ en suivant la plus forte pente.
+
+\section{Paramètres}
+
+On considère que nos ordinateurs sont situés dans $n$ armoires, qui comptent chacune $p$ ordinateurs (soit $np$ ordinateurs au total). Chaque armoire est paramétrée par sa position au sol $(X_i, X_i)$ pour $i \in \{1, ..., n\}$, et chaque ordinateur est paramétré par sa quantité de calculs $K_j$ pour $j \in \{1, ..., np\}$.
+
+Pour que l'algorithme du gradient fonctionne, on va introduire des coordonnées réduites, afin de comparer de manière pertinente les paramètres et leurs variations entre aux. Ainsi, à la place des coordonnées spatiales $(X_i, Y_i)$, on utilisera $(x_i, y_i)$, où $x_i = \frac{X_i}{L_x}$ et $y_i = \frac{Y_i}{L_y}$, où $L_x$ et $L_y$ sont les longueurs de la pièce. De même, à la place de la quantité de calcul $K_j$, on utilisera la quantité de calcul réduite $k_j = \frac{K_j}{K}$, où $K$ est la quantité de calcul totale.
+
+On prend aussi en compte le fait que tous les ordinateurs ne sont pas forcément en fonctionnement. Pour cela, en amont du lancement de l'aglorithme, on fixe $b_{1,1}, ..., b_{1, p}, ..., b_{n, p}$ valant \p{True} ou \p{False}, déterminant pour chaque ordinateur s'il est allumé ou pas. La quantité maximale de calcul par ordinateur étant limitée, le nombre minimal d'ordinateur.
+
+\section{Modèles}
+
+\begin{enumerate}
+    \item Les parois de la pièce sont à température constante
+    \item L'air extérieur est à température constante
+    \item Prolongation du modèle précédent par l'implémentation d'un système de refroidissement
+\end{enumerate}
+
+\end{document}
