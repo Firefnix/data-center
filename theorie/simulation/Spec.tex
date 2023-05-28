@@ -56,7 +56,7 @@
 
 On cherche à réaliser une simulation des échanges thermiques entre deux systèmes :
 \begin{itemize}
-    \item Un ordinateur (\ordi), recevant  une puissance $P$, initialement à la température $T_0$
+    \item Un ordinateur (\ordi), recevant une puissance $P$, initialement à la température $T_0$
     \item Le milieu extérieur (\air), qu'on considèrera être de l'air (sec)
 \end{itemize}
 
@@ -162,6 +162,13 @@ Ci-dessus se trouve une visualisation des résultats sous l'hypothèse d'une pui
 
 \includegraphics[scale=0.37]{1dB_P500mW_t11000s.png}
 
+\subsubsection{Hypothèse C}
+
+Dans le cadre de l'expérience du TP-3, séance 2, on souhaite déterminer la valeur de la conductivité $\lambda$ de l'ordinateur à partir de deux relevés de température en fonction du temps.
+
+On trouve que
+
+
 
 \subsection{Modèle bidimensionnel}
 
@@ -180,14 +187,37 @@ L'équation obtenue est, par le même travail que précédemment
 
 $$\pdv{T}{t} = D(x, y) \left( \pdv[2]{T}{x} + \pdv[2]{T}{y} \right)+ P_c$$
 
+À nouveau, une formule utilisant le slicing permet d'écrire :
+\begin{itemize}
+    \item Le terme de dérivée seconde par rapport à $x$ est
+    \begin{python}
+    T[1:Nx, ti+1] = A * (T[:Nx-1, ti] + T[2:, ti]) + B * T[1:Nx, ti] + Te * P_c
+    \end{python}
+\end{itemize}
+
+
+\section{Calcul d'une conductivité}
+
+On veut calculer la conductivité efficace moyenne d'un ordinateur à partir de relevés expérimentaux. On a mesuré la température $T(t)$ sur le processeur de l'ordinateur en fonction du temps, alors que la face inférieure de l'ordinateur était en contact thermique (supposé parfait) avec une plaque chauffante à la température $T_p(t)$.
+
+On modélise la situation de manière unidimentionnelle, où l'axe de travail est l'axe vertical $(Ox)$. Cet axe est composé de trois parties, qui sont chacune des pavés droits de surface $S$ commune et d'épaisseur variable, de bas en haut
+\begin{enumerate}
+    \item L'ordinateur, d'épaisseur $\SI{1}{cm}$
+    \item L'air, d'épaisseur $\alpha$ restant encore à discuter
+\end{enumerate}
+
+On impose la condition limite qu'en $x = 0$ la température vaut $T_c(t)$, ce qui traduit la perfection du contact plaque-ordinateur. On cherche à choisir intelligemment $\lambda$ et $\alpha$ de manière à obtenir une température théorique $T_h(t)$ au niveau du processeur qui soit « proche » de la température expérimentale $T(t)$. L'équation de la chaleur est la même que précédemment.
+
+Après mise en place de la simulation, on trouve par tâtonnements les valeurs $\alpha = \SI{45}{cm}$ et $\lambda = \SI{2,13}{.10^{-4}.W.m^{-1}.K^{-1}}$.
+
 \section*{Annexe : notations}
 
 \begin{itemize}
     \item Un nom de variable, un nom de fonction, n'a pas de majuscule. On ne peut pas nommer une variable ou une fonction \p{lambda}.
-    \item Si on a besoin de donner un nom long à une variable, ou à une fonction, on met des « \_ » par exemple \p{grande\_chaise\_rouge}
-    \item Il n'y a pas d'espace autour de parenthèses lors d'un appel ou d'une définition de fonction
-    \item Autour d'un égal de définition (\p{=}) ou d'un signe de relation (\p{==}, \p{<=}, \p{<}, etc.) il y a des espaces, un avant et un après
-    \item Dans du code comme dans un \LaTeX, après une virgule il y a un espace
+    \item Si on a besoin de donner un nom long à une variable, ou à une fonction, on met des « \_ » par exemple \p{grande\_chaise\_rouge}.
+    \item Il n'y a pas d'espace autour de parenthèses lors d'un appel ou d'une définition de fonction.
+    \item Autour d'un égal de définition (\p{=}) ou d'un signe de relation (\p{==}, \p{<=}, \p{<}, etc.) il y a des espaces, un avant et un après.
+    \item Dans du code comme dans un \LaTeX, après une virgule il y a un espace.
 \end{itemize}
 
 \end{document}
