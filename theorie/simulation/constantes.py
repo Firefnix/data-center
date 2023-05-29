@@ -9,7 +9,7 @@ T0 = kelvin(25) # °C
 
 # Caractéristiques de l'ordinateur
 S = 85.60e-3 * 53.98e-3 # surface, 85,60 mm × 53,98 mm, en m^2
-L, l, lp = 10, 10e-2, 1e-2 # m
+L, l, lp = 10, 10e-2, 3e-2 # m
 V = S * l
 m = 90.9e-3 # kg, masse totale de l'ordinateur
 rho = m / V
@@ -38,8 +38,14 @@ def Da(T): # K -> m^2/s
     return Ga(T) / (rho_a(T) * c_a)
 Da0 = Da(T0)
 D_si = G_si / (rho_si * c_si)
-D = 8.25e-8 # expérimental
+D = 8.25e-8 # expérimental, 8.25e-8 M^2/s
 G = D * rho * c
+
+def P_ordinateur(K, T) -> float:
+    a = 0.001756489136630004
+    b = 0.36499732057780465e-6
+    c = 0.9409716753510062
+    return a*T + b*K + c
 
 if __name__ == '__main__':
     print(f'T0 = {T0} K = {celsius(T0)} °C')
