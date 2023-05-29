@@ -97,9 +97,9 @@ K1=np.array([0,500,1000,1500,2000,2500,3000])
 I2=np.array([0.275,0.279,0.3,0.318,0.34,0.355,0.375])
 K2=np.array([0,500,1000,1500,2000,2500,3000])
 #1er image
-plt.plot(np.array([0, 0.25, 0.5, 0.75, 1, 1.25, 1.75]),Max,marker='+', color='red', label='T = 51 °C')
+plt.plot(np.array([0, 0.25, 0.5, 0.75, 1, 1.25, 1.75]),U*Max,marker='+', color='red', label='T = 51 °C')
 #2eme image
-plt.plot(np.array([0, 0.25, 0.5, 0.75, 1, 1.25, 1.75]),Min,marker='+', color='blue', label='T = 40 °C')
+plt.plot(np.array([0, 0.25, 0.5, 0.75, 1, 1.25, 1.75]),U*Min,marker='+', color='blue', label='T = 40 °C')
 #Pourcentage de difference
 n=len(Min)
 somme=0
@@ -108,6 +108,6 @@ for i in range(n):
 diffpourcentage=somme/n
 print(f'Différence relative : {diffpourcentage*100:.2f} % (diff. divisée par la moyenne)')
 plt.xlabel('Calculs (millions par seconde)')
-plt.ylabel('Intensité (A)')
+plt.ylabel('Puissance (W)')
 plt.legend()
 plt.show()
