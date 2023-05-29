@@ -32,7 +32,7 @@ e = 17e-3 # épaisseur du socle de l'ordinateur, 1 cm
 Nx, L = 100, e + alpha # m
 Xe = L / Nx
 
-S = 1e-4 # surface, 10 cm * 10 cm, en m^2
+S = 85.60e-3 * 53.98e-3 # surface, 85,60 mm × 53,98 mm, en m^2
 
 tau = L**2 / D(0)
 Nt = int((Nx**2) / (0.5))
@@ -64,12 +64,13 @@ print(f'Durée de simulation : {tau:.2f}')
 print(f'Durée d\'expérinence : {t[-1] - t[0]:.2f}')
 rho, c = 573, 4.5 # kg.m^-3, kJ.K^-1.kg^-1
 G = rho * c * D(0)
+print(f'D = {D(0):.2e} m^2/s')
 print(f'λ = {G:.2e} W.m^-1.K^-1')
 
 if __name__ == '__main__':
-    plt.plot(t - t[0], T_plaque, color='g', label='Plaque chauffante (exp.)')
-    plt.plot(t - t[0], T_proc, color='b', label='Processeur (exp.)')
-    plt.plot(Te*np.array(range(Nt)), celsius(T[x_pos, :-1]), color='orange', label='Processeur (th.)')
+    plt.plot(t - t[0], T_plaque, color='g', label='Plaque chauffante (expérience)')
+    plt.plot(t - t[0], T_proc, color='b', label='Processeur (expérience)')
+    plt.plot(Te*np.array(range(Nt)), celsius(T[x_pos, :-1]), color='orange', label='Processeur (simulation)')
     plt.xlabel('Temps (s)')
     plt.ylabel('Température (°C)')
     plt.legend()
