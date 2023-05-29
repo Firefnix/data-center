@@ -1,5 +1,4 @@
 # Constantes thermodynamiques
-
 def kelvin(T): # °C -> K
     return T + 273.15
 
@@ -8,16 +7,23 @@ def celsius(T): # K -> °C
 
 T0 = kelvin(25) # °C
 
+# Caractéristiques de l'ordinateur
+S = 85.60e-3 * 53.98e-3 # surface, 85,60 mm × 53,98 mm, en m^2
+L, l, lp = 10, 10e-2, 1e-2 # m
+V = S * l
+m = 90.9e-3 # kg, masse totale de l'ordinateur
+rho = m / V
+
 # Masses volumiques
-rho = 2_330 # kg.m^-3 | wikipedia:silicium à 25°C
+rho_si = 2_330 # kg.m^-3 | wikipedia:silicium à 25°C
 def rho_a(T): # K -> kg.m^-3
     return 346.384 / T
 rho_a0 = rho_a(T0)
 
 # Capacités thermiques massiques
 c_a = 1_004 # J.kg^-1.K^-1
-c = 700 # J.kg^-1.K^-1 | wikipedia:silicium
-# print(f'c = {c} J.kg^-1.K^-1')
+c_si = 700 # J.kg^-1.K^-1 | wikipedia:silicium
+c = 4.5e3 # J.K^-1.kg^-1 | expérimental
 
 # Conductivités thermiques (notées G et pas lambda)
 def Ga(T): # K -> W.m^-1.K^-1 | à 1 bar
@@ -25,17 +31,19 @@ def Ga(T): # K -> W.m^-1.K^-1 | à 1 bar
     l = -0.000044075614398888*vA*vA+0.0766069577308689*vA+24.3560822452597
     return l / 1000
 Ga0 = Ga(T0)
-G = 148 # W.m^-1.K^-1 | wikipedia:silicium
+G_si = 148 # W.m^-1.K^-1 | wikipedia:silicium
 
 # Diffusivités thermiques
 def Da(T): # K -> m^2/s
     return Ga(T) / (rho_a(T) * c_a)
 Da0 = Da(T0)
-D = G / (rho * c)
+D_si = G_si / (rho_si * c_si)
+D = 8.25e-8 # expérimental
+G = D * rho * c
 
 if __name__ == '__main__':
     print(f'T0 = {T0} K = {celsius(T0)} °C')
-    print(f'ρ = {rho} kg.m^-3')
+    print(f'ρ = {rho:.2f} kg.m^-3')
     print(f'ρ_a = {rho_a0:.2f} kg.m^-3 [à T0]')
     print(f'λ = {G:.2e} W.m^-1.K^-1')
     print(f'λ_a = {Ga0:.2e} W.m^-1.K^-1 [à T0]')
