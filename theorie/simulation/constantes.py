@@ -9,10 +9,10 @@ T0 = kelvin(25) # °C
 
 # Caractéristiques de l'ordinateur
 S = 85.60e-3 * 53.98e-3 # surface, 85,60 mm × 53,98 mm, en m^2
-L, l, lp = 10, 10e-2, 3e-2 # m
+L, l, lp = 1, 10e-2, 3e-2 # m
 V = S * l
 m = 90.9e-3 # kg, masse totale de l'ordinateur
-rho = m / V
+rho = 1.16e3 # kg/m^3, m / V
 
 # Masses volumiques
 rho_si = 2_330 # kg.m^-3 | wikipedia:silicium à 25°C
