@@ -98,8 +98,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Consommation électrique d'un data-center}
-\author{Malo Leroy, Ulysse Tanguy-Bompard}
+\title{Consommation électrique d'un data center}
+\author{Candidat n° 21802}
+\date{}
 
 \begin{document}
 
@@ -111,96 +112,103 @@
 
 
 \begin{frame}
-\frametitle{Ancrage au thème et motivation}
+    \frametitle{Ancrage au thème et motivation}
 
-\includegraphics[width=0.55\textwidth]{carte_data_center.png}
-
-Ancrage : plus de la moitié des \textit{data center} français sont en zone urbaine
-
-Motivation : écologie, enjeux économiques
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{carte_data_center.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Plus de la moitié des \textit{data center} français sont en zone urbaine
+                \item 3 \% de la consommation mondiale d'électricité
+                \item Objectif : réduire leur consommation
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
     \frametitle{Plan}
     \begin{enumerate}
-        \item Modélisation d'un ordinateur
+        \item Modélisation d'un data center
         \item Grandeurs caractéristiques
         \item Puissance consommée
         \item Simulation d'un data center
-        \item Répartition optimale avec l'algorithme du gradient (non fait)
+        \item Répartition optimale avec l'algorithme du gradient
     \end{enumerate}
 \end{frame}
 
+% \begin{frame}
+%     \frametitle{Modélisation d'un data center}
+%     \framesubtitle{modèles qui n'ont pas étés retenus}
+%
+%     \begin{columns}
+%         \def \x {0} % origine
+%         \def \xa {2}
+%         \def \xb {4.5}
+%         \def \xc {6}
+%
+%         \def \y {0} % origine
+%     \begin{column}{0.25\textwidth}
+%         $U\eff = \SI{230}{V}$
+%
+%         $I\eff = \SI{0,20}{A}$
+%
+%         \includegraphics[width=0.8\textwidth]{wattmetre.jpg}
+%         Ordinateur de bureau complet
+%     \end{column}
+%     \vrule{}
+%     \begin{column}{0.375\textwidth}
+%         $R_1 = \SI{1,6}{k\ohm}$
+%         $C_1 = \SI{1,9}{\micro F}$
+%     \begin{tikzelec}
+%         \draw (\x, \y)--(\xc, \y);
+%         \TikzelecResistance \xa \y
+%         \TikzelecNom {$R_1$}    {0}   {1}
+%         \TikzelecCondensateur \xb \y+6
+%         \TikzelecNom {$C_1$}    {0}   {1}
+%
+%         \end{tikzelec}
+%         \begin{tikzelec}
+%         % Suite
+%         \draw (\x, \y)--(\xc, \y);
+%
+%         \TikzelecResistance \xa \y
+%         \TikzelecNom {$R_3$}    {0}   {1}
+%
+%         \TikzelecBobine \xb \y
+%         \TikzelecNom {$L$}    {0}   {1}
+%     \end{tikzelec}
+%     $R_3 = \SI{800}{\ohm}$
+%     $L = \SI{2,6}{H}$
+%     \end{column}
+%     \begin{column}{0.375\textwidth}
+%         $R_2 = \SI{1,6}{k\ohm}$
+%
+%         $C_2 = \SI{2,0}{\micro F}$
+%         \def \xe {3}
+%         \def \xf {4}
+%         \def \yd {-2}
+%         \begin{tikzelec}
+%             \draw (\x, \y)--(\xf+1, \y);
+%             \draw (\xa-1, \y)--(\xa-1, \yd);
+%             \draw (\xa-1, \yd)--(\xf, \yd);
+%             \draw (\xf, \yd)--(\xf, \y);
+%
+%             \TikzelecCondensateur {\xa+.5} \y
+%             \TikzelecNom {$C_2$}    {0}   {1}
+%
+%             \TikzelecResistance {\xa+.5} \yd
+%             \TikzelecNom {$R_2$}    {0}   {-1}
+%         \end{tikzelec}
+%     \end{column}
+%     \end{columns}
+% \end{frame} % modélisation
+
 \begin{frame}
-    \frametitle{Modélisation d'un ordinateur}
-    \framesubtitle{modèles qui n'ont pas étés retenus}
-
-    \begin{columns}
-        \def \x {0} % origine
-        \def \xa {2}
-        \def \xb {4.5}
-        \def \xc {6}
-
-        \def \y {0} % origine
-    \begin{column}{0.25\textwidth}
-        $U\eff = \SI{230}{V}$
-
-        $I\eff = \SI{0,20}{A}$
-
-        \includegraphics[width=0.8\textwidth]{wattmetre.jpg}
-        Ordinateur de bureau complet
-    \end{column}
-    \vrule{}
-    \begin{column}{0.375\textwidth}
-        $R_1 = \SI{1,6}{k\ohm}$
-        $C_1 = \SI{1,9}{\micro F}$
-    \begin{tikzelec}
-        \draw (\x, \y)--(\xc, \y);
-        \TikzelecResistance \xa \y
-        \TikzelecNom {$R_1$}    {0}   {1}
-        \TikzelecCondensateur \xb \y+6
-        \TikzelecNom {$C_1$}    {0}   {1}
-
-        \end{tikzelec}
-        \begin{tikzelec}
-        % Suite
-        \draw (\x, \y)--(\xc, \y);
-
-        \TikzelecResistance \xa \y
-        \TikzelecNom {$R_3$}    {0}   {1}
-
-        \TikzelecBobine \xb \y
-        \TikzelecNom {$L$}    {0}   {1}
-    \end{tikzelec}
-    $R_3 = \SI{800}{\ohm}$
-    $L = \SI{2,6}{H}$
-    \end{column}
-    \begin{column}{0.375\textwidth}
-        $R_2 = \SI{1,6}{k\ohm}$
-
-        $C_2 = \SI{2,0}{\micro F}$
-        \def \xe {3}
-        \def \xf {4}
-        \def \yd {-2}
-        \begin{tikzelec}
-            \draw (\x, \y)--(\xf+1, \y);
-            \draw (\xa-1, \y)--(\xa-1, \yd);
-            \draw (\xa-1, \yd)--(\xf, \yd);
-            \draw (\xf, \yd)--(\xf, \y);
-
-            \TikzelecCondensateur {\xa+.5} \y
-            \TikzelecNom {$C_2$}    {0}   {1}
-
-            \TikzelecResistance {\xa+.5} \yd
-            \TikzelecNom {$R_2$}    {0}   {-1}
-        \end{tikzelec}
-    \end{column}
-    \end{columns}
-\end{frame} % modélisation
-
-\begin{frame}
-    \frametitle{Modélisation d'un ordinateur}
-    \framesubtitle{Désavantages des modèles non retenus}
+    \frametitle{Modélisation d'un data center}
+    \framesubtitle{Modèles non retenus}
 
     \begin{itemize}
         \item Ordinateur de bureau
@@ -210,19 +218,17 @@ Motivation : écologie, enjeux économiques
         \end{itemize}
         \item Circuit équivalent
         \begin{itemize}
-            \item Grandeurs non variables (calculs, température)
-            \item Définition de la température difficile
+            \item Grandeurs fonction de la température
         \end{itemize}
     \end{itemize}
 \end{frame} % inconvénients des modèles non retenus
 
 \begin{frame}
-    \frametitle{Modélisation d'un ordinateur}
-    \framesubtitle{Modèle retenu : Raspberry Pi}
+    \frametitle{Modélisation d'un data center}
+    \framesubtitle{Dispositif retenu : Raspberry Pi}
 
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            Avantages
             \begin{itemize}
                 \item Peu dangereux
                 \item Réponse rapide aux perturbations
@@ -238,9 +244,9 @@ Motivation : écologie, enjeux économiques
     \frametitle{Grandeurs caractéristiques}
 
     \begin{itemize}
-        \item Masse volumique $\rho$
-        \item Capacité thermique $C$
-        \item Conductivité thermique $\lambda$
+        \item Masse volumique moyenne
+        \item Capacité thermique massique moyenne
+        \item Conductivité thermique moyenne
     \end{itemize}
 \end{frame}
 
@@ -251,6 +257,8 @@ Motivation : écologie, enjeux économiques
     Dimensions $\SI{85,60}{mm} \times \SI{53,98}{mm} \times \SI{17,00}{mm}$
 
     Masse $\SI{90,9}{g}$
+
+    Masse volumique moyenne $\SI{1.16e3}{kg.m^{-3}}$
 \end{frame}
 
 \begin{frame}
@@ -279,44 +287,19 @@ Motivation : écologie, enjeux économiques
 
 \begin{frame}
     \frametitle{Grandeurs caractéristiques}
-    \framesubtitle{Masse en eau du calorimètre}
-
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            Protocole
-            \begin{enumerate}
-                \item Le laboratoire est initialement à $\SI{20}{\cel}$
-                \item On met dans le calorimètre 200 g d'eau chaude à $\SI{52}{\cel}$
-                \item On mesure après thermalisation (pas trop longue pour éviter les fuites thermiques) la température de l'eau $T_\text{f} = \SI{47}{\cel}$
-            \end{enumerate}
-        \end{column}
-        \vrule{}
-        \begin{column}{0.5\textwidth}
-            (1\ier{} principe) $\Delta U = C \Delta T$
-            Résultats
-            \begin{itemize}
-                \item Masse en eau $m_\text{calo} = \SI{37}{g}$
-                \item Capacité thermique $C_\text{calo} = \SI{167}{J/K}$
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Grandeurs caractéristiques}
     \framesubtitle{Capacité thermique}
 
     \begin{columns}
         \begin{column}{0.5\textwidth}
             Protocole
             \begin{enumerate}
-                \item Avant calculs, $\moy{T}_\text{i} = \SI{18,98}{\cel}$ et intensité moyenne de 288 mA
-                \item Lancement des calculs à $t = \SI{1}{min}$
-                \item Fin des calculs à $t = \SI{381,6}{s}$. Pendant les calculs, on a
+                \item Avant calculs ($\SI{18,98}{\cel}$) intensité moyenne de 288 mA
+                \item Lancement des calculs à $\SI{1}{min}$
+                \item Fin des calculs à $\SI{381,6}{s}$. Pendant les calculs, on a
                 \begin{itemize}
-                    \item la tension 5 V
+                    \item tension 5 V
                     \item intensité moyenne 381 mA
-                    \item le travail électrique $W = \SI{612}{J}$
+                    \item travail électrique $\SI{612}{J}$
                 \end{itemize}
                 \item Thermalisation : sur les 100 dernières secondes, $\SI{20,63}{\cel}$
             \end{enumerate}
@@ -332,8 +315,30 @@ Motivation : écologie, enjeux économiques
             Commentaires
             \begin{itemize}
                 \item valeur élevée (ex. Silicium)
-                \item masse de la carcasse
                 \item pertes thermiques (10 min)
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Masse en eau du calorimètre (sans Raspberry Pi)}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{enumerate}
+                \item Le laboratoire est initialement à $\SI{20}{\cel}$
+                \item On met dans le calorimètre 200 g d'eau chaude à $\SI{52}{\cel}$
+                \item On mesure après thermalisation la température de l'eau : $\SI{47}{\cel}$
+            \end{enumerate}
+        \end{column}
+        \vrule{}
+        \begin{column}{0.5\textwidth}
+            (1\ier{} principe) $\Delta U = C \Delta T$
+            \begin{itemize}
+                \item Masse en eau $\SI{37}{g}$
+                \item Capacité thermique $\SI{1,7e2}{J/K}$
             \end{itemize}
         \end{column}
     \end{columns}
@@ -345,8 +350,9 @@ Motivation : écologie, enjeux économiques
 
     Protocole
     \begin{enumerate}
-        \item Plaque chauffante à $T_\text{plaque}(t)$
-        \item Processeur à $T_\text{proc}(t)$
+        \item Plaque chauffante
+        \item Mesure de la température aux deux extrémités
+        \item Diffusion thermique : lien entre les températures et la conductivité
     \end{enumerate}
 \end{frame}
 
@@ -369,6 +375,8 @@ Motivation : écologie, enjeux économiques
     \framesubtitle{Conductivité moyenne}
 
     \includegraphics[width=\textwidth]{moyennes_glissantes_monte_carlo.png}
+
+    $$\sigma_\text{moyen} = \SI{0,09}{\cel}$$
 \end{frame}
 
 \begin{frame}
@@ -409,15 +417,14 @@ def calculs(n):
 
 \begin{frame}
     \frametitle{Puissance consommée}
-    \framesubtitle{Mesure de l'intensité}
+    \framesubtitle{Dispositif expérimental}
 
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            Protocole
             \begin{enumerate}
-                \item On influe sur la température (glace, lampe de chantier)
+                \item On modifie la température au processeur (glace, lampe de chantier)
                 \item On impose la quantité de calculs
-                \item On mesure l'intensité consommée
+                \item On mesure l'intensité moyenne consommée
             \end{enumerate}
         \end{column}
         \begin{column}{0.5\textwidth}
@@ -434,6 +441,17 @@ def calculs(n):
             \end{tikzpicture}
         \end{column}
     \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Résultats expérimentaux}
+
+    \includegraphics[width=0.9\textwidth]{difference_en_temperature.png}
+
+    \begin{center}
+        Écart relatif : 4 \%
+    \end{center}
 \end{frame}
 
 \begin{frame}
@@ -460,12 +478,12 @@ def calculs(n):
 
     \begin{itemize}
         \item Allure de plan
-        $$P = a \times K + b \times T + c$$
+        $$P = a \times T + b \times K + c$$
         \item Régression linéaire avec \p{np.linalg.lstsq}
         \begin{itemize}
-            \item $a = \SI{5.1e-4}{W/K}$
-            \item $b = \SI{3.4e-7}{W/\text{calcul par seconde}}$
-            \item $c = \SI{0.73}{W}$
+            \item $a = \SI{1.8e-3}{W/K}$
+            \item $b = \SI{3.6e-7}{W/\text{calcul par seconde}}$
+            \item $c = \SI{0.94}{W}$
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -474,7 +492,11 @@ def calculs(n):
     \frametitle{Puissance consommée}
     \framesubtitle{Régression linéaire}
 
-    \includegraphics[width=0.7\textwidth]{plan.png}
+    \includegraphics[width=0.7\textwidth]{regression_cube.png}
+
+    \begin{center}
+        Écart relatif : 3 \%
+    \end{center}
 \end{frame}
 
 \begin{frame}
@@ -487,12 +509,13 @@ def calculs(n):
         \begin{itemize}
             \item Puissance volumique uniforme
         \end{itemize}
-        \item Air extérieur
+        \item Air ambiant
         \begin{itemize}
-            \item Pas de convection (seulement la conduction)
+            \item Pas de convection (seulement la diffusion)
             \item Conductivité dépendant de la température
             \item Masse volumique dépendant de la température
         \end{itemize}
+        \item Salle isolée
     \end{itemize}
 \end{frame}
 
@@ -501,41 +524,78 @@ def calculs(n):
     \framesubtitle{Principe de l'aglorithme}
 
     \begin{itemize}
-        \item Temps et espace discrétisés
-        \item Température : tableau \p{numpy}
-        \begin{itemize}
-            \item 1D \p{T[x, t]} (cylindre)
-            \item 2D \p{T[x, y, t]} (plan épais)
-        \end{itemize}
-        \item Équation différentielle (1D)
+        \item Temps et espace (1D) discrétisés
+        \item Température : tableau \p{numpy} \p{T[x, t]}
+        \item Équation aux dérivées partielles
             $$\pdv{T}{t} = D(x) \pdv[2]{T}{x} + P_c(x) \quad \text{où} \quad P_c(x) = \frac{P_v}{\rho c}$$
-        \item Traduction informatique (1D)
+        \item Traduction informatique
         \begin{python}
 T[xi, ti+1] = T[xi, ti] + (t_e / (x_e**2)) * D(xi)
     (T[xi+1, ti] - T[xi, ti] + T[xi-1, ti])
     + P_c(xi) * t_e
         \end{python}
-        \item Deux hypothèses
-        \begin{enumerate}[A]
-            \item Air à température constante
-            \item Enceinte calorifugée (avec air)
-        \end{enumerate}
     \end{itemize}
 
 \end{frame}
 
 \begin{frame}
     \frametitle{Simulation d'un data center}
-    \framesubtitle{Résultats pour l'hypothèse A}
+    \framesubtitle{Ordinateur seul et puissance constante}
 
-    \includegraphics[width=\textwidth]{hypA_C1.67.png}
+    \includegraphics[width=\textwidth]{hypB_C1.67.png}
 \end{frame}
 
 \begin{frame}
     \frametitle{Simulation d'un data center}
-    \framesubtitle{Résultats pour l'hypothèse B}
+    \framesubtitle{Ordinateurs multiples et dépendances}
 
-    \includegraphics[width=\textwidth]{hypB_C1.67.png}
+    \includegraphics[width=\textwidth]{temperature_3.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Ordinateurs multiples et dépendances}
+
+    \includegraphics[width=\textwidth]{etat_final_3.png}
+
+    \begin{center}
+        Après $\SI{1}{h}$ de calculs
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Ordinateurs multiples et dépendances}
+
+    \includegraphics[width=\textwidth]{puissance_3.png}
+
+    \begin{center}
+        Énergie consommée en $\SI{1}{h}$ : $\SI{16}{kJ}$
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Répartition optimale}
+    \framesubtitle{Algorithme du gradient}
+
+    Pour trouver un minimum d'une fonction $f$ :
+    \begin{itemize}
+        \item Calcul du gradient au point $M$, $\grad f (M)$
+        \item Test d'arrêt : fin si $||\grad f (M)|| < \varepsilon$
+        \item Nouveau point $M \leftarrow M - \alpha \times \grad f (M)$
+    \end{itemize}
+
+    Coordonnées réduites : $\frac{x_i}{L}$ et $\frac{K_i}{K}$ pour avoir $f : [0, 1]^{2n} \rightarrow \mathbb{R}$
+\end{frame}
+
+\begin{frame}
+    \frametitle{Répartition optimale}
+    \framesubtitle{Résultats qualitatifs}
+
+    \begin{itemize}
+        \item Calculs très longs ($\SI{15}{min}$ pour 4 ordinateurs à 1D)
+        \item Répartition spatiale régulière, en donnant plus de calculs aux ordinateurs les plus au centre
+    \end{itemize}
 \end{frame}
 
 %=====================================================
