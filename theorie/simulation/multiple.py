@@ -2,7 +2,8 @@ import numpy as np
 from constantes import T0, P_ordinateur, L, l, lp, D, S, c, rho, Da0
 from plot_multiple import plot_puissance, plot_processeurs, plot_final
 
-tau = 30*60 # s, 30 min
+DEBUG = True
+tau = 2*60*60 # s, 30 min
 Nx = 200
 Xe = L / Nx
 Nt = int((Nx**2) / (0.5)) # 0.5 est une constante magique
@@ -15,20 +16,21 @@ def fixe_K(val):
 def donne_K():
     return _K
 
-def energie(*args) -> float:
-    P, T, X, K = f(*args)
+def energie(args: np.ndarray) -> float:
+    P, T, X, K = f(args)
     return Te * sum(P)
 
-def f(*args) -> float:
+def f(args: np.ndarray) -> float:
     X, n = _positions(L, args)
     K = _calculs(args)
+    print(X, K)
     T = _condition_initiale(Nx, Nt, T0)
     # _condition_limite_A(T)
     _initialise_zones(X)
     P = np.zeros(Nt)
     A = (Dx() * Te) / (Xe**2)
     B = 1 - 2*A
-    print(f'[debug] Valeurs min/max pour A : {min(A):.2e}/{max(A):.2e}')
+    if DEBUG: print(f'[debug] Valeurs min/max pour A : {min(A):.2e}/{max(A):.2e}')
     for ti in range(Nt):
         P_ti, Pc = _puissances(T[:, ti], K, X)
         P[ti] = P_ti
@@ -51,11 +53,11 @@ def _condition_limite_B(T, ti): # continuité de la température aux bords
 
 def _positions(L, args):
     assert len(args) % 2 == 0
-    return L * np.array(args[:len(args) // 2]), len(args) // 2
+    return L * args[:len(args) // 2], len(args) // 2
 
 def _calculs(args):
     assert len(args) % 2 == 0
-    k = np.array(args[len(args) // 2:])
+    k = args[len(args) // 2:]
     return donne_K() / sum(k) * k
 
 def _puissances(T, K, X):
@@ -64,7 +66,7 @@ def _puissances(T, K, X):
     n = len(X)
     p_tab = [P_ordinateur(K[i], T[int(X[i] // Xe)]) for i in range(n)]
     for z in range(n):
-        for xi in positions(z):
+        for xi in POSITIONS[z]:
             pc[xi] = p_tab[z] / Cp
     return sum(p_tab), pc
 
@@ -76,10 +78,15 @@ AIR = -2
 def _initialise_zones(X):
     assert _pas_de_conflit(X)
     global ZONES
-    ZONES = np.array([_zone(xi, X) for xi in range(Nx-1)])
-
-def positions(z: int):
-    return [xi for xi in range(Nx-1) if ZONES[xi] == z]
+    global POSITIONS
+    ZONES = np.zeros(Nx-1, dtype=int)
+    POSITIONS = {i: [] for i in range(len(X))}
+    POSITIONS[AIR] = []
+    POSITIONS[CARCASSE] = []
+    for xi in range(Nx-1):
+        z = _zone(xi, X)
+        ZONES[xi] = z
+        POSITIONS[z].append(xi)
 
 def _pas_de_conflit(X):
     return True
@@ -117,12 +124,13 @@ def hypB(T, ti): # continuité aux bords
     T[-1, ti+1] = T[-2, ti+1]
 
 if __name__ == '__main__':
-    fixe_K(100000)
+    fixe_K(1e6)
     print(f'Unité spatiale : {Xe:.2f} m')
     print(f'Unité temporelle : {Te:.2f} s, durée totale : {int(Te*Nt)} s')
     t_visible = 2*3600 # s, 2 h
     i_visible = 1 + int(t_visible / Te)
-    P, T, X, K = f(.2, .6, .8, .3, .3, .4)
+    # P, T, X, K = f(np.array((.4, .6, .8, .3, .4, .3)))
+    P, T, X, K = f(np.array((.1, .2, .3, .9, .05, .05)))
     E = Te * sum(P)
     print(f'Énergie totale consommée : {int(E)} J soit {E / 3.6e6:.2f} kWh')
     plot_puissance(P, Te)
