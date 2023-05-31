@@ -20,7 +20,7 @@ def plot_processeurs(T, X, Te, Xe):
     t = Te * np.arange(0., Nt)
     for i in range(n):
         plt.plot(t, celsius(T[int(X[i] / Xe), :]), color=_couleurs[i],
-            label=f'Processeur {i+1} en x = {X[i]}')
+            label=f'Processeur {i+1} en x = {X[i]} m')
     plt.xlabel('t (en s)')
     plt.ylabel('T (en °C)')
     plt.title(f'Températures aux {n} processeurs')
