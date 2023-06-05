@@ -1,17 +1,18 @@
 import numpy as np
+from multiple import fixe_K, energie
 
-#grandeurs
-xo = np.array([0.1]) #point initial
-epsi = 0.0001 #epsilon
-pas = 0.0001
-nbrtourspc = 5
 #on suppose avoir que des nombres entre 0 et 1
-
+def main():
+    fixe_K(1e6)
+    n = 3 # nombre d'ordinateurs
+    x0 = point_initial(n)
+    epsilon = 5. # epsilon
+    pas = 0.02
+    xf = v1grad(energie, pas, x0, epsilon)
+    print(f'Point initial : {x0}')
+    print(f'Point final : {xf}')
 
 #définitions fonction de bases
-def f(tab):
-    return (tab[0] - 1/2)**2
-
 def verif_point(p):
     for i in p:
         if i > 1 :
@@ -50,14 +51,25 @@ def norme (vect):
     return np.sqrt(somme)
 
 #algo
-def v1grad(f, pas, xo, epsi):
-    point = xo
+def v1grad(f, pas, x0, epsilon):
+    point = x0
     while True:
+        print(f'Actuellement au point {point}')
         nablaf = gradient(f, pas, point)
         n = norme(nablaf)
-        if n < epsi:
+        print(f'\tGradient : {nablaf}, de norme {n}')
+        if n < epsilon:
             break
         point = point - pas * nablaf
     return point
 
-print(v1grad(f, pas, xo, epsi))
+def point_initial(n):
+    l = []
+    for i in range(n):
+        l.append((i+1) / (n+2))
+    for i in range(n):
+        l.append(1 / n)
+    return np.array(l)
+
+if __name__ == '__main__':
+    main()
