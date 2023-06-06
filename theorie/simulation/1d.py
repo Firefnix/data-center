@@ -1,7 +1,7 @@
 from enum import Enum, auto
 import numpy as np
 from plot1d import plot
-from constantes import T0, Da, D, c
+from constantes import T0, Da, D
 
 hyp = 'B' # hypothèse
 print(f'Hypothèse {hyp}')
