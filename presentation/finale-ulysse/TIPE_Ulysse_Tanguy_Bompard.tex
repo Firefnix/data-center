@@ -137,7 +137,7 @@
         \item Grandeurs caractéristiques
         \item Puissance consommée
         \item Simulation d'un data center
-        \item Répartition minimisant l'énergie consommée avec l'algorithme du gradient
+        \item Répartition minimisant la puissance consommée en régime stationnaire avec l'algorithme du gradient
     \end{enumerate}
 \end{frame}
 
@@ -177,75 +177,32 @@
             \item $\rho = \SI{1.16e3}{kg.m^{-3}}$
         \end{itemize}
         \item Capacité thermique massique moyenne $c$
+        \begin{itemize}
+            \item Expérience avec calorimètre
+            \item $c = \SI{4,5}{kJ.K^{-1}.kg^{-1}}$
+        \end{itemize}
         \item Conductivité thermique moyenne $\lambda$
     \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{Grandeurs caractéristiques}
-    \framesubtitle{Capacité thermique}
-
-    \begin{center}
-        \begin{tikzpicture}
-            \node at (0, 0) {\includegraphics[width=0.7\textwidth]{tp-3.jpg}};
-            \node at (-2, -4) {Calorimètre};
-            \node at (6, 1.5) {Carte d'acquisition};
-            \node at (6, 0) {Alimentation};
-            \node at (2, -4) {Raspberry Pi (dans le calorimètre)};
-            \node at (6, -4) {Ampèremètre};
-            \node at (6, -2) {Thermocouple};
-
-            \draw[->, line width=1mm] (-2, -3.5) -- (-2, 0); % Cal
-            \draw[->, line width=1mm] (4.5, 1.5) -- (0, 0.5); % CS
-            \draw[->, line width=1mm] (4.5, 0) -- (2.5, 0.5); % Ali
-            \draw[->, line width=1mm] (0, -3.5) -- (-1.75, -0.5); % Rpi
-            \draw[->, line width=1mm] (4.5, -2) -- (1.4, -0.4); % T
-            \draw[->, line width=1mm] (6, -3.7) -- (0, -1); % A
-        \end{tikzpicture}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Grandeurs caractéristiques}
-    \framesubtitle{Capacité thermique}
-
-    \begin{columns}
-        \begin{column}{0.55\textwidth}
-            \begin{enumerate}
-                \item[0.] Mesure de la masse en eau du calorimètre $m_\text{calo} = \SI{37}{g}$
-                \item Avant calculs ($\SI{19,0}{\cel}$) intensité moyenne de 288 mA
-                \item Lancement des calculs à $\SI{1}{min}$
-                \item Fin des calculs à $\SI{6}{min}$. Pendant les calculs, on a
-                \begin{itemize}
-                    \item tension $\SI{5,0}{V}$
-                    \item intensité moyenne 381 mA
-                    \item travail électrique $\SI{612}{J}$
-                \end{itemize}
-                \item Thermalisation : sur les 100 dernières secondes, $\SI{20,6}{\cel}$
-            \end{enumerate}
-        \end{column}
-        \vrule{}
-        \begin{column}{0.45\textwidth}
-            (1\ier{} principe) $\Delta U = W = C \Delta T$
-            \begin{itemize}
-                \item Capacité thermique $C = \SI{204}{J/K}$
-                \item Capacité thermique massique $c = \SI{4,5}{kJ.K^{-1}.kg^{-1}}$
-                \item Valeur surévaluée car on a négligé les pertes
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Grandeurs caractéristiques}
     \framesubtitle{Conductivité moyenne}
 
-    Protocole
-    \begin{enumerate}
-        \item Plaque chauffante
-        \item Mesure de la température aux deux extrémités
-        \item Diffusion thermique : lien entre les températures et la conductivité
-    \end{enumerate}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Protocole
+            \begin{enumerate}
+                \item Plaque chauffante
+                \item Mesure de la température aux deux extrémités
+                \item Diffusion thermique : lien entre les températures et la conductivité
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{agitateur_chauffant.jpg}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 
@@ -265,18 +222,8 @@
     \includegraphics[width=\textwidth]{d_simulation.png}
 
     On détermine $D$ grâce à l'équation de la diffusion
-    $D = \SI{8.25e-8}{m^2/s}$ \hfill
-    $\lambda = D \rho c = \SI{4.30e-4}{W.m^{-1}.K^{-1}}$
-\end{frame}
-
-\begin{frame}
-    \frametitle{Puissance consommée}
-
-    \begin{enumerate}
-        \item Définition de la quantité de calcul
-        \item Mesure de la consommation du Raspberry Pi
-        \item Régression linéaire
-    \end{enumerate}
+    $D = \SI{3.1e-05}{m^2/s}$ \hfill
+    $\lambda = D \rho c = \SI{1.6e+02}{W.m^{-1}.K^{-1}}$
 \end{frame}
 
 \begin{frame}[fragile]
@@ -333,9 +280,34 @@ while True:
     \frametitle{Puissance consommée}
     \framesubtitle{Résultats expérimentaux}
 
-    \includegraphics[width=0.9\textwidth]{difference_en_temperature.png}
+    \includegraphics[width=\textwidth]{difference_en_temperature.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Résultats expérimentaux}
+
+    \begin{columns}
+        \begin{column}{.7\textwidth}
+            \includegraphics[width=\textwidth]{difference_en_calculs.png}
+        \end{column}
+        \begin{column}{.3\textwidth}
+            On suppose qu'on peut faire un développement limité à l'ordre 1
+            $P = a\times T + b(K)$
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Puissance consommée}
+    \framesubtitle{Régression linéaire}
+
     \begin{center}
-        $P = a\times K + b(T)$
+        \includegraphics[width=0.7\textwidth]{regression_cube.png}
+
+        Plan $P = a \times T + b \times K + c$
+
+        Moyenne des écarts relatifs : 3 \%
     \end{center}
 \end{frame}
 
@@ -356,70 +328,98 @@ while True:
 \end{frame}
 
 \begin{frame}
-    \frametitle{Puissance consommée}
-    \framesubtitle{Régression linéaire}
-
-    \begin{center}
-        \includegraphics[width=0.7\textwidth]{regression_cube.png}
-
-        Moyenne des écarts relatifs : 3 \%
-    \end{center}
-\end{frame}
-
-\begin{frame}
     \frametitle{Simulation d'un data center}
     \framesubtitle{Hypothèses}
 
     \begin{itemize}
         \item Carcasse de l'ordinateur : pavé uniforme
-        \item Source thermique : pavé centré sur la carcasse
+        \item Source thermique
         \begin{itemize}
+            \item Pavé centré sur la carcasse
             \item Puissance volumique uniforme
         \end{itemize}
         \item Air ambiant
         \begin{itemize}
-            \item On néglige la convection (diffusion seulement)
+            \item On néglige la convection
+            \item Diffusion thermique uniquement
         \end{itemize}
-        \item Salle isolée
+        \item Murs à température constante
     \end{itemize}
+
+    On s'attend à une convergence vers un régime stationnaire.
 \end{frame}
 
 \begin{frame}[fragile]
     \frametitle{Simulation d'un data center}
-    \framesubtitle{Principe de l'aglorithme}
+    \framesubtitle{Principe de l'algorithme}
 
     \begin{itemize}
         \item Temps et espace (1D) discrétisés
         \item Température : tableau \p{numpy} \p{T[x, t]}
         \item Équation aux dérivées partielles
-            $$\pdv{T}{t} = D(x) \pdv[2]{T}{x} + P_c(x) \quad \text{où} \quad P_c(x) = \frac{P_v}{\rho c}$$
-        \item Traduction informatique
-        \begin{python}
-T[xi, ti+1] = T[xi, ti] + (t_e / (x_e**2)) * D(xi)
-    (T[xi+1, ti] - T[xi, ti] + T[xi-1, ti])
-    + P_c(xi) * t_e
-        \end{python}
+            $$\pdv{T}{t} = D(x) \pdv[2]{T}{x} + P_c(x, T) \quad \text{où} \quad P_c(x, T) = \frac{P(K, T)}{C_\text{processeur}}~\text{ou}~0$$
     \end{itemize}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{diffusivite.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{pc_initial.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Répartition optimale}
-    \framesubtitle{Ordinateurs multiples et dépendances}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Champ de température}
 
-    \includegraphics[width=\textwidth]{positions.png}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{temperatures_initiales.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{temperatures_finales.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Répartition optimale}
-    \framesubtitle{Algorithme du gradient}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Températures aux processeurs}
 
-    Pour trouver un minimum d'une fonction $f$, ici l'énergie totale consommée en $\SI{12}{h}$ :
+    \includegraphics[width=\textwidth]{temperatures_processeurs.png}
+
+    Régime stationnaire atteint au bout de quelques heures.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Simulation d'un data center}
+    \framesubtitle{Puissances consommées}
+
+    \includegraphics[width=\textwidth]{puissances.png}
+
+    Régime stationnaire atteint au bout de quelques heures.
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Répartition minimisant la puissance}
+    \framesubtitle{Algorithme de descente du gradient}
+
+    Ici la fonction $f$ est la puissance consommée en régime stationnaire.
+    \vspace{.0em}
+
+    \pause
+    Pour trouver un minimum d'une fonction $f$ :
     \begin{itemize}
         \item Calcul du gradient au point $M$, $\grad f (M)$
         \item Test d'arrêt : fin si $||\grad f (M)|| < \varepsilon$
         \item Nouveau point $M \leftarrow M - \alpha \times \grad f (M)$
     \end{itemize}
 
+    \pause
+    \vspace{1em}
     On note $L$ la longueur de la pièce et $K$ la quantité de calculs totale.
     Coordonnées réduites : $\frac{x_i}{L}$ et $\frac{K_i}{K}$ pour avoir $f : [0, 1]^{2n} \rightarrow \mathbb{R}$
 \end{frame}
@@ -429,54 +429,154 @@ T[xi, ti+1] = T[xi, ti] + (t_e / (x_e**2)) * D(xi)
     \framesubtitle{Algorithme du gradient}
 
     \begin{python}
+def ieme_derive_partielle(point, i):
+    pnew = np.copy(point)
+    pnew[i] = point[i] + pas
+    return (f(pnew) - f(point)) / pas
+
+def gradient(point):
+    return np.array([
+        ieme_derive_partielle(point, i)
+        for i in range(len(point))])
+
 point = point_initial
 while True:
-    nablaf = gradient(f, pas, point)
+    nablaf = gradient(f, point)
     if norme(nablaf) < epsilon:
-        break
+        break # sortie de l'algorithme
     point = point - pas * nablaf
 print(point) # point final
     \end{python}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Répartition optimale}
+    \frametitle{Répartition minimisant la puissance}
+    \framesubtitle{Minimum pour 4 ordinateurs}
+
+    \includegraphics[width=\textwidth]{temperatures_finales_minimum.png}
+    % P, T, X, K, Pc0 = f(np.array((.01, .03, .965, .99, .5, .1, .1, .6)))
+    % 12 h
+
+    \begin{center}
+        Puissance totale en régime stationnaire $P = \SI{6,22}{W}$
+
+        Environ 10 \% des calculs par ordinateur « intérieur » et 40 \% par ordinateur « extérieur »
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Répartition minimisant la puissance}
+    \framesubtitle{Maximum pour 4 ordinateurs}
+
+    \includegraphics[width=\textwidth]{temperatures_finales_maximum.png}
+    % P, T, X, K, Pc0 = f(np.array((.04, .17, .85, .96, .6, .4, .3, .65)))
+
+    \begin{center}
+        Quasi-équirépartition des calculs
+
+        $P = \SI{6,47}{W}$, économie de 4 \%
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Répartition minimisant la puissance}
     \framesubtitle{Résultats qualitatifs}
 
+    Pour une consommation minimale :
     \begin{itemize}
-        \item Éviter de tout concentrer au centre
-        \item Donner autant de calculs à chaque groupe d'ordinateurs
-        \item Dans chaque groupe, l'ordinateur le plus proche du mur a plus de calculs
+        \item Ne pas regrouper tous les ordinateurs
+        \item Éloigner les ordinateurs du centre de la pièce
+        \item Donner plus de calculs aux ordinateurs proches des murs
+        \item Bien maintenir les murs à température constante
     \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Répartition optimale}
-    \framesubtitle{Configurations optimales}
+    \frametitle{Conclusion}
 
-    \includegraphics[width=\textwidth]{min_position.png}
+    \begin{itemize}
+        \item Avantages concrets
+        \begin{itemize}
+            \item Économies d'énergie de l'ordre de 4 \%
+            \item Enjeu économique majeur
+        \end{itemize}
+        \item Pistes d'approfondissement
+        \begin{itemize}
+            \item Mesures plus précises des grandeurs caractéristiques
+            \item Simulation à 2D
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[plain, noframenumbering]
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Capacité thermique}
 
     \begin{center}
-        Après $\SI{12}{h}$ de calculs
+        \begin{tikzpicture}
+            \node at (0, 0) {\includegraphics[width=0.7\textwidth]{tp-3.jpg}};
+            \node at (-2, -4) {Calorimètre};
+            \node at (6, 1.5) {Carte d'acquisition};
+            \node at (6, 0) {Alimentation};
+            \node at (2, -4) {Raspberry Pi (dans le calorimètre)};
+            \node at (6, -4) {Ampèremètre};
+            \node at (6, -2) {Thermocouple};
+
+            \draw[->, line width=1mm] (-2, -3.5) -- (-2, 0); % Cal
+            \draw[->, line width=1mm] (4.5, 1.5) -- (0, 0.5); % CS
+            \draw[->, line width=1mm] (4.5, 0) -- (2.5, 0.5); % Ali
+            \draw[->, line width=1mm] (0, -3.5) -- (-1.75, -0.5); % Rpi
+            \draw[->, line width=1mm] (4.5, -2) -- (1.4, -0.4); % T
+            \draw[->, line width=1mm] (6, -3.7) -- (0, -1); % A
+        \end{tikzpicture}
     \end{center}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Répartition optimale}
-    \framesubtitle{Configurations optimales}
+\begin{frame}[plain, noframenumbering]
+    \frametitle{Grandeurs caractéristiques}
+    \framesubtitle{Capacité thermique}
 
-    \includegraphics[width=\textwidth]{min_temperature.png}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{enumerate}
+                \item[0.] Mesure de la masse en eau du calorimètre $m_\text{calo} = \SI{37}{g}$
+                \item Avant calculs ($\SI{19,0}{\cel}$) intensité moyenne de 288 mA
+                \item Lancement des calculs à $\SI{1}{min}$
+                \item Fin des calculs à $\SI{6}{min}$. Pendant les calculs, on a
+                \begin{itemize}
+                    \item tension $\SI{5,0}{V}$
+                    \item intensité moyenne 381 mA
+                    \item travail électrique $\SI{612}{J}$
+                \end{itemize}
+                \item Thermalisation : sur les 100 dernières secondes, $\SI{20,6}{\cel}$
+            \end{enumerate}
+        \end{column}
+        \pause
+        \vrule{}
+        \begin{column}{0.45\textwidth}
+            (1\ier{} principe) $\Delta U = W = C \Delta T$
+            \begin{itemize}
+                \item Capacité thermique $C = \SI{204}{J/K}$
+                \item Capacité thermique massique $c = \SI{4,5}{kJ.K^{-1}.kg^{-1}}$
+                \item Valeur surévaluée car on a négligé les pertes
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
-\begin{frame}
-    \frametitle{Répartition optimale}
-    \framesubtitle{Configurations optimales}
+\begin{frame}[plain, noframenumbering]
+    \frametitle{Mesures de la puissance}
+    \framesubtitle{Erreurs de mesure}
 
-    \includegraphics[width=\textwidth]{min_puissance.png}
-
-    \begin{center}
-        Énergie consommée en $\SI{12}{h}$ : $\SI{20,8}{kJ}$ soit $\SI{0.06}{kWh}$
-    \end{center}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{tous_les_points.png}
+        \end{column}
+        \vline
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{colorisee.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}[plain, noframenumbering]

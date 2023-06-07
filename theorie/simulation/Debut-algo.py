@@ -1,16 +1,21 @@
 import numpy as np
-from multiple import fixe_K, energie
+from multiple import fixe_K, pstat
+from constantes import L, l
 
 #on suppose avoir que des nombres entre 0 et 1
 def main():
     fixe_K(1e6)
-    n = 3 # nombre d'ordinateurs
+    n = 4 # nombre d'ordinateurs
     x0 = point_initial(n)
-    epsilon = 5. # epsilon
-    pas = 0.02
-    xf = v1grad(energie, pas, x0, epsilon)
-    print(f'Point initial : {x0}')
-    print(f'Point final : {xf}')
+    epsilon = 3e-3 # epsilon
+    pas = .7
+    essais = 3
+    for i in range(essais):
+        if i != 0: x0 = point_aleatoire(n)
+        print(f'Point initial : {x0}')
+        xf = v1grad(pstat, pas, x0, epsilon)
+        print(f'Point final : {xf}')
+    # P, T, X, K = f(xf)
 
 #définitions fonction de bases
 def verif_point(p):
@@ -44,7 +49,7 @@ def gradient(fonc, pas, point):
         grad[i] = iemederive_part(fonc, point, i, pas)
     return point_valide(point, grad, pas)
 
-def norme (vect):
+def norme(vect):
     somme = 0
     for i in vect:
         somme += i**2
@@ -66,10 +71,21 @@ def v1grad(f, pas, x0, epsilon):
 def point_initial(n):
     l = []
     for i in range(n):
-        l.append((i+1) / (n+2))
+        l.append((i+1) / (n+1))
     for i in range(n):
         l.append(1 / n)
     return np.array(l)
+
+def point_aleatoire(n):
+    k = np.random.uniform(size=n)
+    lst = []
+    a = l/L
+    bas, haut = a/2, 1 - n*a
+    for i in range(n):
+        x = np.random.uniform(bas, haut)
+        lst.append(x)
+        bas, haut = x + a/2, 1 - (n-i)*a
+    return np.concatenate((k, np.array(lst)))
 
 if __name__ == '__main__':
     main()
